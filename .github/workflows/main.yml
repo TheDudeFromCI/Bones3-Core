@@ -3,14 +3,31 @@ name: CI
 on: push
 
 jobs:
+    dll-artifact:
+        name: Create DLL Artifact
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v2
+              
+            - name: .NET Core CLI
+              uses: baruchiro/github-actions@0.0.1
+              
+            - run: |
+                dotnet build
+                
+            - name: Upload a Build Artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: Bones3-Core DLL
+                path: Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+
     sonar:
         name: Send project to SonarCloud
         runs-on: ubuntu-latest
 
         steps:
             - uses: actions/checkout@v2
-              with:
-                  lfs: true
 
             - run: |
                   git fetch --prune --unshallow
