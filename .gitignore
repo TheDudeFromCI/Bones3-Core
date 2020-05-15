@@ -1,5 +1,5 @@
-Bones3-Core/bin
-Bones3-Core/obj
+Core/bin
+Core/obj
 Tests/bin
 Tests/obj
 coverage.info
