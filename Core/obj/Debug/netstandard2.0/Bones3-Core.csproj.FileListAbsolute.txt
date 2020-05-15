@@ -1,0 +1,9 @@
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/bin/Debug/netstandard2.0/Bones3-Core.deps.json
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/bin/Debug/netstandard2.0/Bones3-Core.pdb
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.csprojAssemblyReference.cache
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.csproj.CoreCompileInputs.cache
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.AssemblyInfoInputs.cache
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.AssemblyInfo.cs
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.dll
+/home/thedudefromci/Documents/workspace/Bones3-Core/Core/obj/Debug/netstandard2.0/Bones3-Core.pdb

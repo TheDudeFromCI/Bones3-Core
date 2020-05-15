@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "MJ/Pf6o+qzRFpnWADSyBWcdqm/Vaq3N0iRI5Z0w47QXYVMqHxrqX3gIUwF8RwJk63mhnQPaBLhVpbfcuPqMTBw==",
+  "success": true,
+  "projectFilePath": "/home/thedudefromci/Documents/workspace/Bones3-Core/Core/Bones3-Core.csproj",
+  "expectedPackageFiles": [
+    "/home/thedudefromci/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/home/thedudefromci/.nuget/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

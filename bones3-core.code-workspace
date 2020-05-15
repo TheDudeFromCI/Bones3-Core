@@ -5,5 +5,17 @@
       "path": "."
     }
   ],
-  "settings": {}
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/coverage.info": true,
+      "**/coverage.opencover.xml": true
+    },
+    "coverage-gutters.lcovname": "Tests/coverage.info",
+    "dotnet-test-explorer.testProjectPath": "Tests"
+  }
 }

@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Bones3\Bones3.csproj" />
+        <ProjectReference Include="..\Core\Bones3-Core.csproj" />
     </ItemGroup>
 
 </Project>
