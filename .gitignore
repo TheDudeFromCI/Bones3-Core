@@ -2,3 +2,5 @@ Bones3-Core/bin
 Bones3-Core/obj
 Tests/bin
 Tests/obj
+coverage.info
+coverage.opencover.xml
