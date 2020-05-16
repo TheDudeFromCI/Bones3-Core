@@ -21,7 +21,7 @@ namespace Bones3Rebuilt
         /// <param name="tasks">The task list to add to.</param>
         private void GenerateVisuals(IChunkProperties properties, RemeshTaskStack taskStack)
         {
-            List<int> materials = new List<int>();
+            List<ITextureAtlas> materials = new List<ITextureAtlas>();
 
             foreach (var pos in BlockIterator(properties.ChunkSize.Value))
             {
@@ -32,9 +32,9 @@ namespace Bones3Rebuilt
                     for (int j = 0; j < 6; j++)
                     {
                         var face = type.Face(j);
-                        var atlas = face.TextureAtlas;
+                        var atlas = face.Texture?.Atlas;
 
-                        if (materials.Contains(atlas))
+                        if (atlas == null || materials.Contains(atlas))
                             continue;
 
                         materials.Add(atlas);
@@ -45,7 +45,7 @@ namespace Bones3Rebuilt
         }
 
         /// <summary>
-        /// Generates the collision remeshing task, as needed.
+        /// Generates the collision remesh task, as needed.
         /// </summary>
         /// <param name="properties">The chunk properties.</param>
         /// <param name="tasks">The task list to add to.</param>

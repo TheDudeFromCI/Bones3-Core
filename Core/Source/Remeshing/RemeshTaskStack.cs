@@ -8,7 +8,7 @@ namespace Bones3Rebuilt
     public class RemeshTaskStack
     {
         private readonly List<IRemeshTask> m_CollisionRemesh = new List<IRemeshTask>();
-        private readonly List<IRemeshTask> m_VisualRemesh = new List<IRemeshTask>();
+        private readonly List<IVisualRemeshTask> m_VisualRemesh = new List<IVisualRemeshTask>();
         private readonly ChunkPosition m_ChunkPosition;
 
         /// <summary>
@@ -29,7 +29,11 @@ namespace Bones3Rebuilt
             var collisionMesh = CompressTasks(m_CollisionRemesh);
             var visualMesh = CompressTasks(m_VisualRemesh);
 
-            return new RemeshReport(m_ChunkPosition, collisionMesh, visualMesh);
+            var atlases = new ITextureAtlas[m_VisualRemesh.Count];
+            for (int i = 0; i < m_VisualRemesh.Count; i++)
+                atlases[i] = m_VisualRemesh[i].Atlas;
+
+            return new RemeshReport(m_ChunkPosition, collisionMesh, visualMesh, atlases);
         }
 
         /// <summary>
@@ -37,7 +41,8 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <param name="tasks">The list of tasks.</param>
         /// <returns>The layered proc mesh.</returns>
-        private LayeredProcMesh CompressTasks(List<IRemeshTask> tasks)
+        private LayeredProcMesh CompressTasks<T>(List<T> tasks)
+            where T : IRemeshTask
         {
             var mesh = new LayeredProcMesh();
 
@@ -63,7 +68,7 @@ namespace Bones3Rebuilt
         /// Adds a visual remesh task to this stack.
         /// </summary>
         /// <param name="task">The task to add.</param>
-        public void AddVisualTask(IRemeshTask task)
+        public void AddVisualTask(IVisualRemeshTask task)
         {
             m_VisualRemesh.Add(task);
         }
