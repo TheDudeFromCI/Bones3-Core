@@ -29,8 +29,8 @@ namespace Test
             var distributor = new Mock<IRemeshDistributor>();
             var chunkProperties = new Mock<IChunkProperties>();
 
-            var task0 = new Mock<IRemeshTask>();
-            var task1 = new Mock<IRemeshTask>();
+            var task0 = new Mock<IVisualRemeshTask>();
+            var task1 = new Mock<IVisualRemeshTask>();
             var task2 = new Mock<IRemeshTask>();
 
             distributor.Setup(dis => dis.CreateTasks(chunkProperties.Object, It.IsAny<RemeshTaskStack>()))
@@ -59,8 +59,8 @@ namespace Test
             var distributor = new Mock<IRemeshDistributor>();
             var chunkProperties = new Mock<IChunkProperties>();
 
-            var task0 = new Mock<IRemeshTask>();
-            var task1 = new Mock<IRemeshTask>();
+            var task0 = new Mock<IVisualRemeshTask>();
+            var task1 = new Mock<IVisualRemeshTask>();
             var task2 = new Mock<IRemeshTask>();
 
             task0.Setup(t => t.Mesh).Returns(new ProcMesh());
