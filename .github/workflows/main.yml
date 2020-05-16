@@ -28,7 +28,7 @@ jobs:
         name: Deploy Preview
         needs: [test]
         runs-on: ubuntu-latest
-        if: github.ref != 'refs/heads/master'
+        if: github.ref == 'refs/heads/dev'
         steps:
             - uses: actions/checkout@v2
 
