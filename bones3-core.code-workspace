@@ -21,6 +21,8 @@
     },
     "coverage-gutters.lcovname": "Tests/coverage.info",
     "dotnet-test-explorer.testProjectPath": "Tests",
-    "cSpell.words": ["Ungenerated", "voxel", "remesh"]
+    "cSpell.words": ["Ungenerated", "voxel", "remesh"],
+    "koverage.coverageFileNames": ["coverage.info"],
+    "koverage.coverageFilePaths": ["Tests"]
   }
 }
