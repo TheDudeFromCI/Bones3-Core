@@ -3,10 +3,9 @@ name: CI
 on: push
 
 jobs:
-    dll-artifact:
-        name: Create DLL Artifact
+    test:
+        name: Build and Test
         runs-on: ubuntu-latest
-        
         steps:
             - uses: actions/checkout@v2
               
@@ -14,24 +13,114 @@ jobs:
               with:
                 dotnet-version: '3.1.100'
               
-            - run: |
-                dotnet build
+            - name: Build and Test
+              run: |
+                  dotnet build
+                  dotnet test
                 
             - name: Upload a Build Artifact
               uses: actions/upload-artifact@v2
               with:
-                name: Bones3-Core DLL
-                path: Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+                  name: Bones3-Core DLL
+                  path: Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+
+    deploy-preview:
+        name: Deploy Preview
+        needs: [test]
+        runs-on: ubuntu-latest
+        if: github.ref != 'refs/heads/master'
+        steps:
+            - uses: actions/checkout@v2
+
+            - uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: '3.1.100'
+              
+            - name: Build
+              run: dotnet build --version-suffix preview
+              
+            - name: Save Version Info
+              id: get_version
+              run: |
+                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version: ).*")
+                  echo '::set-output name=version_number::$VERSION'
+                  echo "Deploying Bones3-Core version $VERSION"
+
+            - name: Create Release Version
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ steps.get_version.outputs.version_number }}
+                  release_name: ${{ steps.get_version.outputs.version_number }}
+                  draft: false
+                  prerelease: true
+                  body: Auto-generated Build version ${{ steps.get_version.outputs.version_number }}.
+
+            - name: Create Zip Release
+              run: zip -j build Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+
+            - name: Upload Release Zip
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./build.zip
+                  asset_name: build_${{ steps.get_version.outputs.version_number }}.zip
+                  asset_content_type: application/zip
+
+    deploy-release:
+        name: Deploy Release
+        needs: [test]
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/master'
+        steps:
+            - uses: actions/checkout@v2
+
+            - uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: '3.1.100'
+              
+            - name: Build
+              run: dotnet build --version-suffix
+
+            - name: Create Release Version
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: build_${{ steps.build_number.outputs.build_number }}
+                  release_name: Build ${{ steps.build_number.outputs.build_number }}
+                  draft: false
+                  prerelease: false
+                  body: Release version ${{}}.
+
+            - name: Create Zip Release
+              run: zip -j build Core/bin/Debug/netstandard2.0/Bones3-Core.dll
+
+            - name: Upload Release Zip
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./build.zip
+                  asset_name: build_${{ steps.build_number.outputs.build_number }}.zip
+                  asset_content_type: application/zip
 
     sonar:
         name: Send project to SonarCloud
         runs-on: ubuntu-latest
+        needs: [test]
 
         steps:
             - uses: actions/checkout@v2
 
-            - run: |
-                  git fetch --prune --unshallow
+            - name: Deep Clone Repo (For Sonar Blame info)
+              run: git fetch --prune --unshallow
 
             - name: Sonarscanner for dotnet
               uses: Secbyte/dotnet-sonarscanner@v2.2
