@@ -37,12 +37,12 @@ jobs:
                   dotnet-version: '3.1.100'
               
             - name: Build
-              run: dotnet build --version-suffix preview
+              run: dotnet build
               
             - name: Save Version Info
               id: get_version
               run: |
-                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version:).+" | tr -d '[:space:]')
+                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version:).+" | tr -d '[:space:]')-preview
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
 
@@ -68,7 +68,7 @@ jobs:
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./build.zip
-                  asset_name: build_${{ steps.get_version.outputs.version_number }}.zip
+                  asset_name: ${{ steps.get_version.outputs.version_number }}.zip
                   asset_content_type: application/zip
 
     deploy-release:
@@ -115,7 +115,7 @@ jobs:
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./build.zip
-                  asset_name: build_${{ steps.build_number.outputs.build_number }}.zip
+                  asset_name: ${{ steps.get_version.outputs.version_number }}.zip
                   asset_content_type: application/zip
 
     sonar:
