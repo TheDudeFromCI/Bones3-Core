@@ -58,7 +58,7 @@ namespace Bones3Rebuilt
                             var type = m_ChunkProperties.GetBlock(pos);
                             var face = type.Face(j);
                             var rotation = SolveRotation(pos, face.Rotation);
-                            var quad = new GreedyMesher.Quad(rotation, face.TextureIndex);
+                            var quad = new GreedyMesher.Quad(rotation, face.Texture?.Index ?? 0);
 
                             m_GreedyMesher.SetQuad(a, b, quad);
                             planeActive = true;

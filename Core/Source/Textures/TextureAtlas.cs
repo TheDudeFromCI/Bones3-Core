@@ -13,7 +13,12 @@ namespace Bones3Rebuilt
         public int Count => m_TextureList.Count;
 
         /// <inheritdoc cref="ITextureAtlas"/>
-        public void AddTexture(IBlockTexture texture) => m_TextureList.Add(texture);
+        public IBlockTexture AddTexture()
+        {
+            var texture = new BlockTexture(this, Count);
+            m_TextureList.Add(texture);
+            return texture;
+        }
 
         /// <inheritdoc cref="ITextureAtlas"/>
         public IBlockTexture GetTexture(int index) => m_TextureList[index];

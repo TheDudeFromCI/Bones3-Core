@@ -11,10 +11,10 @@ namespace Bones3Rebuilt
         int Count { get; }
 
         /// <summary>
-        /// Adds a texture to this atlas.
+        /// Creates a new block texture and adds it to this atlas.
         /// </summary>
-        /// <param name="texture">The texture to add.</param>
-        void AddTexture(IBlockTexture texture);
+        /// <returns>The newly created texture.</returns>
+        IBlockTexture AddTexture();
 
         /// <summary>
         /// Gets the texture within this atlas at the specified index.

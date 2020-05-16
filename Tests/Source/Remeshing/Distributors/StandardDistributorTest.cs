@@ -48,6 +48,7 @@ namespace Test
                 .Name("Tall Grass")
                 .Solid(false)
                 .Visible(true)
+                .Texture(0, NewTexture())
                 .Build();
 
             props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
@@ -131,6 +132,7 @@ namespace Test
                 .Name("Grass")
                 .Solid(true)
                 .Visible(true)
+                .Texture(0, NewTexture())
                 .Build();
 
             props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
@@ -161,6 +163,16 @@ namespace Test
             Assert.AreEqual(1, report.CollisionMesh.TotalLayers);
         }
 
+        private IBlockTexture NewTexture()
+        {
+            var texture = new Mock<IBlockTexture>();
+            var atlas = new Mock<ITextureAtlas>();
+
+            texture.Setup(t => t.Atlas).Returns(atlas.Object);
+
+            return texture.Object;
+        }
+
         [Test]
         public void ThreeInputsAtlases_ThreeOutputLayers()
         {
@@ -178,9 +190,9 @@ namespace Test
                 .Name("Grass")
                 .Solid(true)
                 .Visible(true)
-                .TextureAtlas(0, 0)
-                .TextureAtlas(1, 1)
-                .TextureAtlas(2, 2)
+                .Texture(0, NewTexture())
+                .Texture(1, NewTexture())
+                .Texture(2, NewTexture())
                 .Build();
 
             props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).

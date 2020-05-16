@@ -21,6 +21,6 @@
     },
     "coverage-gutters.lcovname": "Tests/coverage.info",
     "dotnet-test-explorer.testProjectPath": "Tests",
-    "cSpell.words": ["voxel"]
+    "cSpell.words": ["Ungenerated", "voxel", "remesh"]
   }
 }
