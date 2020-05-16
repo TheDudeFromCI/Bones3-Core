@@ -84,7 +84,14 @@ jobs:
                   dotnet-version: '3.1.100'
               
             - name: Build
-              run: dotnet build --version-suffix
+              run: dotnet build
+              
+            - name: Save Version Info
+              id: get_version
+              run: |
+                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version: ).*")
+                  echo '::set-output name=version_number::$VERSION'
+                  echo "Deploying Bones3-Core version $VERSION"
 
             - name: Create Release Version
               id: create_release
@@ -92,11 +99,11 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  tag_name: build_${{ steps.build_number.outputs.build_number }}
-                  release_name: Build ${{ steps.build_number.outputs.build_number }}
+                  tag_name: ${{ steps.get_version.outputs.version_number }}
+                  release_name: ${{ steps.get_version.outputs.version_number }}
                   draft: false
                   prerelease: false
-                  body: Release version ${{}}.
+                  body: Release version ${{ steps.get_version.outputs.version_number }}.
 
             - name: Create Zip Release
               run: zip -j build Core/bin/Debug/netstandard2.0/Bones3-Core.dll
