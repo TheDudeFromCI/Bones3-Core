@@ -42,7 +42,7 @@ jobs:
             - name: Save Version Info
               id: get_version
               run: |
-                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version: ).*")
+                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version:).+" | tr -d '[:space:]')
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
 
@@ -89,7 +89,7 @@ jobs:
             - name: Save Version Info
               id: get_version
               run: |
-                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version: ).*")
+                  VERSION=$(find . -name Bones3-Core.dll -exec monodis --assembly {} ";" | grep -m 1 -Po "(?<=Version:).+" | tr -d '[:space:]')
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
 
