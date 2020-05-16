@@ -157,7 +157,7 @@ jobs:
                   sonarOrganisation: thedudefromci
                   beginArguments: >
                       /d:sonar.verbose="true"
-                      /d:sonar.cs.opencover.reportsPaths='"src/Test/coverage.opencover.xml"'
+                      /d:sonar.cs.opencover.reportsPaths='"Tests/coverage.opencover.xml"'
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
