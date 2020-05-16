@@ -34,6 +34,7 @@ jobs:
               
             - name: Build Number
               uses: travisj/build-number-action@v1.0.2
+              id: build_number
               
             - name: Save Version Info
               id: get_version
@@ -44,6 +45,8 @@ jobs:
                   VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";")-$BUILD_NUMBER-pre
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
+              env:
+                  BUILD_NUMBER: ${{ steps.build_number.outputs.build-number }} 
 
             - uses: actions/setup-dotnet@v1
               with:
@@ -91,6 +94,7 @@ jobs:
               
             - name: Build Number
               uses: travisj/build-number-action@v1.0.2
+              id: build_number
               
             - name: Save Version Info
               id: get_version
@@ -101,6 +105,8 @@ jobs:
                   VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";")-$BUILD_NUMBER
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
+              env:
+                  BUILD_NUMBER: ${{ steps.build_number.outputs.build-number }} 
 
             - name: Build
               run: dotnet build /p:Version=${{ steps.get_version.outputs.version_number }}
