@@ -42,7 +42,7 @@ jobs:
                   sudo apt-get update -y
                   sudo apt-get install libxml2-utils -y
                   
-                  VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";")-$BUILD_NUMBER-pre
+                  VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";").$BUILD_NUMBER-pre
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
               env:
@@ -102,7 +102,7 @@ jobs:
                   sudo apt-get update -y
                   sudo apt-get install libxml2-utils -y
                   
-                  VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";")-$BUILD_NUMBER
+                  VERSION=$(find . -name Bones3-Core.csproj -exec xmllint --xpath "/Project/PropertyGroup/Version/text()" {} ";").$BUILD_NUMBER
                   echo "::set-output name=version_number::$VERSION"
                   echo "Deploying Bones3-Core version $VERSION"
               env:
