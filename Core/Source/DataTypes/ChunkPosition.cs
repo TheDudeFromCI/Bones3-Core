@@ -40,8 +40,5 @@ namespace Bones3Rebuilt
 
         public static ChunkPosition operator *(ChunkPosition a, int b) =>
             new ChunkPosition(a.X * b, a.Y * b, a.Z * b);
-
-        public static ChunkPosition operator &(ChunkPosition a, int b) =>
-            new ChunkPosition(a.X & b, a.Y & b, a.Z & b);
     }
 }
