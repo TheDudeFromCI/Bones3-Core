@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Bones3Rebuilt;
+using Bones3Rebuilt.BlockTypes;
 
 using NUnit.Framework;
 

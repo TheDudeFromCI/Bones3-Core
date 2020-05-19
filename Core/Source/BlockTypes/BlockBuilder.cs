@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
     /// A builder for creating block types.
@@ -6,8 +6,7 @@ namespace Bones3Rebuilt
     public class BlockBuilder
     {
         private readonly FaceRotation[] m_FaceRotations = new FaceRotation[6];
-        private readonly int[] m_FaceTextureIndices = new int[6];
-        private readonly int[] m_FaceTextureAtlases = new int[6];
+        private readonly IBlockTexture[] m_FaceTextures = new IBlockTexture[6];
         private readonly ushort m_ID;
         private string m_Name = "New Block";
         private bool m_Solid = true;
@@ -68,32 +67,14 @@ namespace Bones3Rebuilt
         }
 
         /// <summary>
-        /// Sets the texture index within the texture atlas to use for the given block face.
+        /// Sets the texture to use for the given block face.
         /// </summary>
         /// <param name="face">The face index.</param>
-        /// <param name="index">The texture index.</param>
+        /// <param name="texture">The texture.</param>
         /// <returns>This builder.</returns>
-        public BlockBuilder TextureIndex(int face, int index)
+        public BlockBuilder Texture(int face, IBlockTexture texture)
         {
-            if (index < 0)
-                throw new System.ArgumentOutOfRangeException("Texture index cannot be negative!");
-
-            m_FaceTextureIndices[face] = index;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the texture atlas index to use for the given block face.
-        /// </summary>
-        /// <param name="face">The face index.</param>
-        /// <param name="index">The texture atlas.</param>
-        /// <returns>This builder.</returns>
-        public BlockBuilder TextureAtlas(int face, int atlas)
-        {
-            if (atlas < 0)
-                throw new System.ArgumentOutOfRangeException("Texture atlas cannot be negative!");
-
-            m_FaceTextureAtlases[face] = atlas;
+            m_FaceTextures[face] = texture;
             return this;
         }
 
@@ -105,7 +86,7 @@ namespace Bones3Rebuilt
         {
             var faces = new BlockFace[6];
             for (int i = 0; i < faces.Length; i++)
-                faces[i] = new BlockFace(i, m_FaceRotations[i], m_FaceTextureIndices[i], m_FaceTextureAtlases[i]);
+                faces[i] = new BlockFace(i, m_FaceRotations[i], m_FaceTextures[i]);
 
             return new BlockType(m_ID, m_Name, m_Solid, m_Visible, faces);
         }

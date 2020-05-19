@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
     /// A block type and it's given properties.

@@ -1,7 +1,6 @@
-using System;
-
 using Bones3Rebuilt;
-
+using Bones3Rebuilt.BlockTypes;
+using Moq;
 using NUnit.Framework;
 
 namespace Test
@@ -25,22 +24,22 @@ namespace Test
 
                 Assert.AreEqual(i, face.Side);
                 Assert.AreEqual(FaceRotation.Normal, face.Rotation);
-                Assert.AreEqual(0, face.TextureIndex);
-                Assert.AreEqual(0, face.TextureAtlas);
+                Assert.AreEqual(null, face.Texture);
             }
         }
 
         [Test]
         public void CustomProperties()
         {
+            var texture = new Mock<IBlockTexture>();
+
             var blockType = new BlockBuilder(7)
                 .Name("Grass")
                 .Solid(false)
                 .Visible(false)
                 .FaceRotation(2, FaceRotation.MirroredClockwise270)
                 .FaceRotation(4, FaceRotation.Mirrored)
-                .TextureIndex(3, 23)
-                .TextureAtlas(1, 3)
+                .Texture(3, texture.Object)
                 .Build();
 
             Assert.AreEqual("Grass", blockType.Name);
@@ -50,8 +49,7 @@ namespace Test
 
             Assert.AreEqual(FaceRotation.MirroredClockwise270, blockType.Face(2).Rotation);
             Assert.AreEqual(FaceRotation.Mirrored, blockType.Face(4).Rotation);
-            Assert.AreEqual(23, blockType.Face(3).TextureIndex);
-            Assert.AreEqual(3, blockType.Face(1).TextureAtlas);
+            Assert.AreEqual(texture.Object, blockType.Face(3).Texture);
         }
     }
 }

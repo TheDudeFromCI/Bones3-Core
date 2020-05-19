@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A utility class for combining quads on a plane in a greedy fashion.
     /// </summary>
-    public class GreedyMesher
+    internal class GreedyMesher
     {
         /// <summary>
         /// A quad within the greedy mesher awaiting combining.
         /// </summary>
-        public struct Quad
+        internal struct Quad
         {
             /// <summary>
             /// The rotation index of this quad.
@@ -105,8 +105,8 @@ namespace Bones3Rebuilt
             if (!m_EnableUVs && state.Active)
                 state = new Quad(0, 0);
 
-            if (x < 0 || x >= m_ChunkSize
-                || y < 0 || y >= m_ChunkSize)
+            if (x < 0 || x >= m_ChunkSize ||
+                y < 0 || y >= m_ChunkSize)
                 throw new System.ArgumentOutOfRangeException($"Quad position ({x}, {y}) not within chunk!");
 
             m_Quads[x * m_ChunkSize + y] = state;

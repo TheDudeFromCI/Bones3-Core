@@ -1,5 +1,5 @@
 using Bones3Rebuilt;
-
+using Bones3Rebuilt.World;
 using NUnit.Framework;
 
 namespace Test
@@ -12,7 +12,19 @@ namespace Test
             var chunkSize = new GridSize(4);
             var world = new World(chunkSize);
 
-            Assert.AreEqual(chunkSize, world.ContainerSize);
+            Assert.AreEqual(chunkSize, world.ChunkSize);
+        }
+
+        [Test]
+        public void GetChunk_DoesntExist()
+        {
+            var chunkSize = new GridSize(4);
+            var world = new World(chunkSize);
+
+            var chunkPosition = new ChunkPosition(15, 129, 63);
+            var chunk = world.GetChunk(chunkPosition);
+            Assert.IsNull(chunk);
+            Assert.IsFalse(world.DoesChunkExist(chunkPosition));
         }
 
         [Test]
@@ -22,50 +34,26 @@ namespace Test
             var world = new World(chunkSize);
 
             var chunkPosition = new ChunkPosition(15, 129, 63);
-            var chunk = world.GetContainer(chunkPosition, true);
+            var chunk = world.CreateChunk(chunkPosition);
 
             Assert.IsNotNull(chunk);
             Assert.AreEqual(chunkPosition, chunk.Position);
             Assert.AreEqual(chunkSize, chunk.Size);
+            Assert.IsTrue(world.DoesChunkExist(chunkPosition));
         }
 
         [Test]
-        public void ChunkCreated_TriggersEvent()
+        public void GetChunk_AlreadyExists()
         {
             var chunkSize = new GridSize(4);
             var world = new World(chunkSize);
 
-            int calls = 0;
-            world.OnBlockContainerCreated += e =>
-            {
-                calls++;
+            var chunkPosition = new ChunkPosition(17, -1000, 8);
+            var chunk1 = world.CreateChunk(chunkPosition);
+            var chunk2 = world.CreateChunk(chunkPosition);
 
-                Assert.IsNotNull(e.BlockContainer);
-                Assert.AreEqual(world, e.ContainerProvider);
-            };
-
-            var chunkPosition = new ChunkPosition(15, 129, 63);
-            world.GetContainer(chunkPosition, true);
-
-            Assert.AreEqual(1, calls);
-        }
-
-        [Test]
-        public void GetExistingChunk_DontTriggerEvent()
-        {
-            var chunkSize = new GridSize(4);
-            var world = new World(chunkSize);
-
-            int calls = 0;
-            world.OnBlockContainerCreated += e => calls++;
-
-            var chunkPosition = new ChunkPosition(0, -1, 0);
-            world.GetContainer(chunkPosition, true);
-            world.GetContainer(chunkPosition, true);
-            world.GetContainer(chunkPosition, true);
-            world.GetContainer(chunkPosition, true);
-
-            Assert.AreEqual(1, calls);
+            Assert.AreSame(chunk1, chunk2);
+            Assert.IsTrue(world.DoesChunkExist(chunkPosition));
         }
 
         [Test]
@@ -74,48 +62,12 @@ namespace Test
             var chunkSize = new GridSize(4);
             var world = new World(chunkSize);
 
-            var chunkPosition = new ChunkPosition(15, 129, 63);
-            world.GetContainer(chunkPosition, true);
-            world.DestroyContainer(chunkPosition);
+            var chunkPosition = new ChunkPosition(5, 19, -3);
+            world.CreateChunk(chunkPosition);
+            world.DestroyChunk(chunkPosition);
 
-            Assert.IsNull(world.GetContainer(chunkPosition, false));
-        }
-
-        [Test]
-        public void DestroyChunk_EventTriggered()
-        {
-            var chunkSize = new GridSize(4);
-            var world = new World(chunkSize);
-
-            var chunkPosition = new ChunkPosition(5, 29, 6);
-            var chunk = world.GetContainer(chunkPosition, true);
-
-            int calls = 0;
-            world.OnBlockContainerDestroyed += e =>
-            {
-                calls++;
-
-                Assert.AreEqual(chunk, e.BlockContainer);
-                Assert.AreEqual(world, e.ContainerProvider);
-            };
-            world.DestroyContainer(chunkPosition);
-
-            Assert.AreEqual(1, calls);
-        }
-
-        [Test]
-        public void DestroyChunk_DoesntExist_DontTriggerEvent()
-        {
-            var chunkSize = new GridSize(4);
-            var world = new World(chunkSize);
-
-            int calls = 0;
-            world.OnBlockContainerDestroyed += e => calls++;
-
-            var chunkPosition = new ChunkPosition(5, 29, 6);
-            world.DestroyContainer(chunkPosition);
-
-            Assert.AreEqual(0, calls);
+            Assert.IsNull(world.GetChunk(chunkPosition));
+            Assert.IsFalse(world.DoesChunkExist(chunkPosition));
         }
     }
 }

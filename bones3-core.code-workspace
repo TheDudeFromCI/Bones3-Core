@@ -13,9 +13,16 @@
       "**/CVS": true,
       "**/.DS_Store": true,
       "**/coverage.info": true,
-      "**/coverage.opencover.xml": true
+      "**/coverage.opencover.xml": true,
+      "Core/bin": true,
+      "Core/obj": true,
+      "Tests/bin": true,
+      "Tests/obj": true
     },
     "coverage-gutters.lcovname": "Tests/coverage.info",
-    "dotnet-test-explorer.testProjectPath": "Tests"
+    "dotnet-test-explorer.testProjectPath": "Tests",
+    "cSpell.words": ["Ungenerated", "voxel", "remesh"],
+    "koverage.coverageFileNames": ["coverage.info"],
+    "koverage.coverageFilePaths": ["Tests"]
   }
 }

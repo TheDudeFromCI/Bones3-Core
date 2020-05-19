@@ -1,16 +1,14 @@
-using Bones3Rebuilt.Util;
-
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A utility class for converting quad data into mesh data.
     /// </summary>
-    public class QuadBuilder
+    internal class QuadBuilder
     {
         /// <summary>
         /// A set of parameters for a quad to generate the vertex data for.
         /// </summary>
-        public struct QuadMesh
+        internal struct QuadMesh
         {
             /// <summary>
             /// Gets the quad X position along the plane.

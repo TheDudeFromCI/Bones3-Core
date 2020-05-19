@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
     /// The properties for a single face of a block type.
@@ -18,30 +18,22 @@ namespace Bones3Rebuilt
         public FaceRotation Rotation { get; }
 
         /// <summary>
-        /// The index of the texture within the texture atlas.
+        /// Gets the block texture which is applied to this block face.
         /// </summary>
-        /// <value>The texture index.</value>
-        public int TextureIndex { get; }
-
-        /// <summary>
-        /// The index of the texture atlas to pull the texture from.
-        /// </summary>
-        /// <value>The texture atlas index.</value>
-        public int TextureAtlas { get; }
+        /// <value>The texture, or null if this block face has no texture.</value>
+        public IBlockTexture Texture { get; }
 
         /// <summary>
         /// Creates a new block face.
         /// </summary>
         /// <param name="side">The side of the block this face is on.</param>
         /// <param name="rotation">The texture rotation for this block face.</param>
-        /// <param name="textureIndex">The texture index for this block face.</param>
-        /// <param name="textureAtlas">The texture atlas for this block face.</param>
-        internal BlockFace(int side, FaceRotation rotation, int textureIndex, int textureAtlas)
+        /// <param name="texture">The texture for this block face.</param>
+        internal BlockFace(int side, FaceRotation rotation, IBlockTexture texture)
         {
             Side = side;
             Rotation = rotation;
-            TextureIndex = textureIndex;
-            TextureAtlas = textureAtlas;
+            Texture = texture;
         }
     }
 }

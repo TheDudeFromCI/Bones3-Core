@@ -1,6 +1,6 @@
 using System;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database
 {
     /// <summary>
     /// A multithreaded task which load an object from the disk.
