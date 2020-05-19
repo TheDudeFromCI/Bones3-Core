@@ -1,7 +1,8 @@
 using Bones3Rebuilt;
-using Bones3Rebuilt.World;
+using Bones3Rebuilt.Database;
 using NUnit.Framework;
 using System.IO;
+using Moq;
 
 namespace Test
 {
@@ -20,22 +21,14 @@ namespace Test
             var rootFolder = TestFolder + "/Saves/world15";
             var db = new WorldDatabase(rootFolder);
 
-            var handler = new WorldPropertiesHandler();
-            db.RegisterFileHandler(handler);
+            var handler = new Mock<IFileHandler<string>>();
+            db.RegisterFileHandler(handler.Object);
 
-            var props = new WorldProperties
-            {
-                ChunkSize = new GridSize(2),
-                WorldName = "New World",
-            };
+            db.SaveObject("Hello World!");
+            handler.Verify(h => h.Save(rootFolder, "Hello World!"));
 
-            var saveTask = db.SaveObject(props);
-            saveTask.FinishTask();
-
-            var loadTask = db.LoadObject<WorldProperties>();
-            var loadData = loadTask.FinishTask();
-
-            Assert.AreEqual(props, loadData.Data);
+            db.LoadObject<string>();
+            handler.Verify(h => h.Load(rootFolder, null));
         }
 
         [Test]

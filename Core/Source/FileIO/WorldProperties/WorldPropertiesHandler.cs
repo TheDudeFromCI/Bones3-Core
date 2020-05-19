@@ -20,7 +20,7 @@ namespace Bones3Rebuilt.Database.WorldProps
     /// <summary>
     /// Saves a world properties object to the disk using the most recent file version format.
     /// </summary>
-    public class WorldPropertiesSaveTask : IFileSaveTask<WorldProperties>
+    internal class WorldPropertiesSaveTask : IFileSaveTask<WorldProperties>
     {
         /// <summary>
         /// An identifier for handling file versioning, to aid in future-proofing.
@@ -80,7 +80,7 @@ namespace Bones3Rebuilt.Database.WorldProps
     /// <summary>
     /// Loads a world properties object from the disk using all known file version formats.
     /// </summary>
-    public class WorldPropertiesLoadTask : IFileLoadTask<WorldProperties>
+    internal class WorldPropertiesLoadTask : IFileLoadTask<WorldProperties>
     {
         private readonly string m_File;
         private readonly Task m_Task;

@@ -1,7 +1,8 @@
 using NUnit.Framework;
+using Bones3Rebuilt.Database.WorldProps;
+using Bones3Rebuilt.Database;
 using Bones3Rebuilt;
 using System.IO;
-using Bones3Rebuilt.World;
 
 namespace Test
 {
