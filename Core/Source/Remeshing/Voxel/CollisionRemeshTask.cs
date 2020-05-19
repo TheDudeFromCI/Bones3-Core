@@ -1,5 +1,3 @@
-using Bones3Rebuilt.Remeshing;
-
 namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
@@ -8,8 +6,9 @@ namespace Bones3Rebuilt.Remeshing.Voxel
     public class CollisionRemeshTask : VoxelChunkMesher
     {
         /// <inheritdoc cref="VoxelChunkMesher"/>
-        public CollisionRemeshTask(ChunkProperties chunkProperties):
-            base(chunkProperties, true, false) {}
+        public CollisionRemeshTask(ChunkProperties chunkProperties) :
+            base(chunkProperties, true, false)
+        { }
 
         /// <inheritdoc cref="VoxelChunkMesher"/>
         public override bool CanPlaceQuad(ChunkProperties chunkProperties, BlockPosition pos, int side)

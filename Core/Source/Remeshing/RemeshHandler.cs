@@ -26,15 +26,16 @@ namespace Bones3Rebuilt.Remeshing
         /// <summary>
         /// Waits for all current tasks to finish executing before continuing.
         /// </summary>
-        public void FinishTasks(List<RemeshReport> reports)
+        /// <param name="finishedTasks">The list to write the finished task stacks to.</param>
+        public void FinishTasks(List<RemeshTaskStack> finishedTasks)
         {
             while (m_ActiveTasks.Count > 0)
             {
                 var task = m_ActiveTasks[0];
                 m_ActiveTasks.RemoveAt(0);
 
-                var report = task.ToReport();
-                reports.Add(report);
+                task.Finish();
+                finishedTasks.Add(task);
             }
         }
 
@@ -51,18 +52,6 @@ namespace Bones3Rebuilt.Remeshing
                 return;
 
             m_Distributors.Add(distributor);
-        }
-
-        /// <summary>
-        /// Removes a remesh distributor from this handler.
-        /// </summary>
-        /// <param name="distributor">The distributor to remove.</param>
-        public void RemoveDistributor(IRemeshDistributor distributor)
-        {
-            if (distributor == null)
-                return;
-
-            m_Distributors.Remove(distributor);
         }
     }
 }

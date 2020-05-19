@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-using Bones3Rebuilt.Remeshing;
-
 namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
@@ -39,7 +37,7 @@ namespace Bones3Rebuilt.Remeshing.Voxel
                         continue;
 
                     materials.Add(material);
-                    taskStack.AddVisualTask(new VisualRemeshTask(properties, material));
+                    taskStack.AddTask(new VisualRemeshTask(properties, material));
                 }
             }
         }
@@ -57,7 +55,7 @@ namespace Bones3Rebuilt.Remeshing.Voxel
 
                 if (type.IsSolid)
                 {
-                    taskStack.AddCollisionTask(new CollisionRemeshTask(properties));
+                    taskStack.AddTask(new CollisionRemeshTask(properties));
                     return;
                 }
             }
@@ -68,7 +66,7 @@ namespace Bones3Rebuilt.Remeshing.Voxel
         /// </summary>
         /// <param name="chunkSize">The size of the chunk.</param>
         /// <returns>The block position iterator.</returns>
-        IEnumerable<BlockPosition> BlockIterator(int chunkSize)
+        private IEnumerable<BlockPosition> BlockIterator(int chunkSize)
         {
             for (int x = 0; x < chunkSize; x++)
                 for (int y = 0; y < chunkSize; y++)

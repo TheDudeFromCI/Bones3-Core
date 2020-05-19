@@ -7,7 +7,8 @@ namespace Bones3Rebuilt.Remeshing
     public interface IRemeshTask
     {
         /// <summary>
-        /// Waits for this task to finish executing before continuing.
+        /// Waits for this task to finish executing before continuing. If task is
+        /// already finished, this method simply returns the generated mesh.
         /// </summary>
         /// <returns>The generated mesh.</returns>
         ProcMesh Finish();

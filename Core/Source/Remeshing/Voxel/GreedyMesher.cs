@@ -1,18 +1,16 @@
 using System.Collections.Generic;
 
-using Bones3Rebuilt.Remeshing;
-
 namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A utility class for combining quads on a plane in a greedy fashion.
     /// </summary>
-    public class GreedyMesher
+    internal class GreedyMesher
     {
         /// <summary>
         /// A quad within the greedy mesher awaiting combining.
         /// </summary>
-        public struct Quad
+        internal struct Quad
         {
             /// <summary>
             /// The rotation index of this quad.
@@ -184,9 +182,9 @@ namespace Bones3Rebuilt.Remeshing.Voxel
         {
             int maxH = m_ChunkSize - 1;
 
-            for (w = q.X;; w++)
+            for (w = q.X; ; w++)
             {
-                for (h = q.Y;; h++)
+                for (h = q.Y; ; h++)
                 {
                     if (h == maxH || !GetQuad(w, h + 1).Equals(q.Quad))
                         break;

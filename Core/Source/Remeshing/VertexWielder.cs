@@ -1,5 +1,7 @@
-namespace Bones3Rebuilt.Remeshing.Voxel
+namespace Bones3Rebuilt.Remeshing
 {
+    // TODO Refactor this mess.
+
     public static class VertexWielder
     {
         public static void WieldVertices(this ProcMesh mesh)

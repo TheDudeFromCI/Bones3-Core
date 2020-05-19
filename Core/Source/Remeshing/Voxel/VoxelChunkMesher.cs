@@ -94,10 +94,10 @@ namespace Bones3Rebuilt.Remeshing.Voxel
                 r = r * 25214903917 + 11;
                 r = r * 25214903917 + 11;
 
-                return (int) (r & 0x7);
+                return (int)(r & 0x7);
             }
 
-            return (int) rot;
+            return (int)rot;
         }
 
         /// <summary>

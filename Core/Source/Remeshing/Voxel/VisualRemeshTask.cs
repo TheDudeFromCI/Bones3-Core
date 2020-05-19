@@ -5,13 +5,16 @@ namespace Bones3Rebuilt.Remeshing.Voxel
     /// <summary>
     /// Generates a visual chunk mesh for a single submesh layer.
     /// </summary>
-    public class VisualRemeshTask : VoxelChunkMesher, IVisualRemeshTask
+    public class VisualRemeshTask : VoxelChunkMesher
     {
-        /// <inheritdoc cref="IVisualRemeshTask"/>
+        /// <summary>
+        /// Gets the material ID this remesh task is targeting.
+        /// </summary>
+        /// <value>The material ID.</value>
         public int MaterialID { get; }
 
         /// <inheritdoc cref="VoxelChunkMesher"/>
-        public VisualRemeshTask(ChunkProperties chunkProperties, int materialID):
+        public VisualRemeshTask(ChunkProperties chunkProperties, int materialID) :
             base(chunkProperties, false, true) => MaterialID = materialID;
 
         /// <inheritdoc cref="VoxelChunkMesher"/>

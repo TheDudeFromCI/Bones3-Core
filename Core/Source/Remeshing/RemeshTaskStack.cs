@@ -7,70 +7,45 @@ namespace Bones3Rebuilt.Remeshing
     /// </summary>
     public class RemeshTaskStack
     {
-        private readonly List<IRemeshTask> m_CollisionRemesh = new List<IRemeshTask>();
-        private readonly List<IVisualRemeshTask> m_VisualRemesh = new List<IVisualRemeshTask>();
-        private readonly ChunkPosition m_ChunkPosition;
+        private readonly List<IRemeshTask> m_Tasks = new List<IRemeshTask>();
+
+        /// <summary>
+        /// Gets the position of the chunk this task stack is targeting.
+        /// </summary>
+        /// <value>The chunk position.</value>
+        public ChunkPosition ChunkPosition { get; }
+
+        /// <summary>
+        /// Gets the number of tasks in this task stack.
+        /// </summary>
+        public int TaskCount => m_Tasks.Count;
 
         /// <summary>
         /// Creates a new remesh task stack.
         /// </summary>
         /// <param name="chunkPosition">The position of the chunk being remeshed.</param>
-        public RemeshTaskStack(ChunkPosition chunkPosition)
-        {
-            m_ChunkPosition = chunkPosition;
-        }
+        internal RemeshTaskStack(ChunkPosition chunkPosition) => ChunkPosition = chunkPosition;
 
         /// <summary>
-        /// Waits for all tasks to finish and converts this remesh task stack into a remesh report.
-        /// </summary>
-        /// <returns>The remesh report.</returns>
-        public RemeshReport ToReport()
-        {
-            var collisionMesh = CompressTasks(m_CollisionRemesh);
-            var visualMesh = CompressTasks(m_VisualRemesh);
-
-            var materialIDs = new int[m_VisualRemesh.Count];
-            for (int i = 0; i < m_VisualRemesh.Count; i++)
-                materialIDs[i] = m_VisualRemesh[i].MaterialID;
-
-            return new RemeshReport(m_ChunkPosition, collisionMesh, visualMesh, materialIDs);
-        }
-
-        /// <summary>
-        /// Compress a list of remesh tasks into a single layered proc mesh.
-        /// </summary>
-        /// <param name="tasks">The list of tasks.</param>
-        /// <returns>The layered proc mesh.</returns>
-        private LayeredProcMesh CompressTasks<T>(List<T> tasks)
-        where T : IRemeshTask
-        {
-            var mesh = new LayeredProcMesh();
-
-            for (int i = 0; i < tasks.Count; i++)
-            {
-                var m = tasks[i].Finish();
-                mesh.GetLayer(i).AddData(m);
-            }
-
-            return mesh;
-        }
-
-        /// <summary>
-        /// Adds a collision remesh task to this stack.
+        /// Adds a remesh task to this stack.
         /// </summary>
         /// <param name="task">The task to add.</param>
-        public void AddCollisionTask(IRemeshTask task)
-        {
-            m_CollisionRemesh.Add(task);
-        }
+        public void AddTask(IRemeshTask task) => m_Tasks.Add(task);
 
         /// <summary>
-        /// Adds a visual remesh task to this stack.
+        /// Gets a remesh task from this stack.
         /// </summary>
-        /// <param name="task">The task to add.</param>
-        public void AddVisualTask(IVisualRemeshTask task)
+        /// <param name="index">The index of the stack.</param>
+        /// <returns>The task.</returns>
+        public IRemeshTask GetTask(int index) => m_Tasks[index];
+
+        /// <summary>
+        /// Waits for all tasks to finish before returning.
+        /// </summary>
+        internal void Finish()
         {
-            m_VisualRemesh.Add(task);
+            foreach (var task in m_Tasks)
+                task.Finish();
         }
     }
 }
