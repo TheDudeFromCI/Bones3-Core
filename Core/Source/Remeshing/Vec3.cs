@@ -1,6 +1,6 @@
 using System;
 
-namespace Bones3Rebuilt.Util
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// A small and compact data structure for storing 3D floating point vector.
@@ -40,9 +40,9 @@ namespace Bones3Rebuilt.Util
 
         public static bool operator ==(Vec3 a, Vec3 b)
         {
-            return Math.Abs(a.X - b.X) < 0.001f
-                && Math.Abs(a.Y - b.Y) < 0.001f
-                && Math.Abs(a.Z - b.Z) < 0.001f;
+            return Math.Abs(a.X - b.X) < 0.001f &&
+                Math.Abs(a.Y - b.Y) < 0.001f &&
+                Math.Abs(a.Z - b.Z) < 0.001f;
         }
 
         public static bool operator !=(Vec3 a, Vec3 b)

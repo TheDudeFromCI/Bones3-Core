@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// Analyzes a chunk when it is queued and generates new remesh tasks.
@@ -10,6 +10,6 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <param name="properties">The chunk properties object.</param>
         /// <param name="taskStack">The list of tasks to add tasks to.</param>
-        void CreateTasks(IChunkProperties properties, RemeshTaskStack taskStack);
+        void CreateTasks(ChunkProperties properties, RemeshTaskStack taskStack);
     }
 }

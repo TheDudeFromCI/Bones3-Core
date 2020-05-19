@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Bones3Rebuilt.Util;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A lookup table for uv coordinates for quads.
     /// </summary>
-    public class UVLookupTable
+    internal class UVLookupTable
     {
         /// <summary>
         /// The quad uv information.
@@ -46,16 +45,31 @@ namespace Bones3Rebuilt
         /// <param name="specs">The quad uv information.</param>
         public void Find(List<Vec3> uvs, UVSpecs specs)
         {
-            if (specs.Side < 0 || specs.Side > 5)
-                throw new System.ArgumentException($"Unknown side {specs.Side}!");
-
-            if (specs.Rotation < 0 || specs.Rotation > 7)
-                throw new System.ArgumentException($"Unknown rotation {specs.Rotation}!");
+            ValidateQuad(specs);
+            CorrectYFaces(ref specs);
 
             if (specs.Side % 2 == 0)
                 FindFront(uvs, specs);
             else
                 FindBack(uvs, specs);
+        }
+
+        void ValidateQuad(UVSpecs specs)
+        {
+            if (specs.Side < 0 || specs.Side > 5)
+                throw new System.ArgumentException($"Unknown side {specs.Side}!");
+
+            if (specs.Rotation < 0 || specs.Rotation > 7)
+                throw new System.ArgumentException($"Unknown rotation {specs.Rotation}!");
+        }
+
+        void CorrectYFaces(ref UVSpecs specs)
+        {
+            // Flip top and bottom sides.
+            if (specs.Side == 3)
+                specs.Side = 2;
+            else if (specs.Side == 2)
+                specs.Side = 3;
         }
 
         void FindFront(List<Vec3> uvs, UVSpecs specs)

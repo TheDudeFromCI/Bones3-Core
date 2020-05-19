@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// Holds a set of remesh distrbutors in order to generate a new mesh for a chunk.
     /// </summary>
-    public class RemeshHandler : IRemeshHandler
+    public class RemeshHandler
     {
         private readonly List<IRemeshDistributor> m_Distributors = new List<IRemeshDistributor>();
         private readonly List<RemeshTaskStack> m_ActiveTasks = new List<RemeshTaskStack>();
 
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public event RemeshFinishCallback OnRemeshFinish;
-
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public void RemeshChunk(IChunkProperties properties)
+        /// <summary>
+        /// Analyses the given chunk and starts a set of remesh tasks for handling that chunk.
+        /// </summary>
+        /// <param name="properties">The chunk properties to analyze.</param>
+        public void RemeshChunk(ChunkProperties properties)
         {
             var taskStack = new RemeshTaskStack(properties.ChunkPosition);
             m_ActiveTasks.Add(taskStack);
@@ -23,17 +23,19 @@ namespace Bones3Rebuilt
                 dis.CreateTasks(properties, taskStack);
         }
 
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public void FinishTasks()
+        /// <summary>
+        /// Waits for all current tasks to finish executing before continuing.
+        /// </summary>
+        /// <param name="finishedTasks">The list to write the finished task stacks to.</param>
+        public void FinishTasks(List<RemeshTaskStack> finishedTasks)
         {
             while (m_ActiveTasks.Count > 0)
             {
                 var task = m_ActiveTasks[0];
                 m_ActiveTasks.RemoveAt(0);
 
-                var report = task.ToReport();
-
-                OnRemeshFinish?.Invoke(new RemeshFinishEvent(report));
+                task.Finish();
+                finishedTasks.Add(task);
             }
         }
 
@@ -50,18 +52,6 @@ namespace Bones3Rebuilt
                 return;
 
             m_Distributors.Add(distributor);
-        }
-
-        /// <summary>
-        /// Removes a remesh distributor from this handler.
-        /// </summary>
-        /// <param name="distributor">The distributor to remove.</param>
-        public void RemoveDistributor(IRemeshDistributor distributor)
-        {
-            if (distributor == null)
-                return;
-
-            m_Distributors.Remove(distributor);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// Generates the basic voxel visual and collision chunk meshes.
@@ -8,7 +8,7 @@ namespace Bones3Rebuilt
     public class StandardDistributor : IRemeshDistributor
     {
         /// <inheritdoc cref="IRemeshTask"/>
-        public void CreateTasks(IChunkProperties properties, RemeshTaskStack taskStack)
+        public void CreateTasks(ChunkProperties properties, RemeshTaskStack taskStack)
         {
             GenerateVisuals(properties, taskStack);
             GenerateCollision(properties, taskStack);
@@ -19,27 +19,25 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <param name="properties">The chunk properties.</param>
         /// <param name="tasks">The task list to add to.</param>
-        private void GenerateVisuals(IChunkProperties properties, RemeshTaskStack taskStack)
+        private void GenerateVisuals(ChunkProperties properties, RemeshTaskStack taskStack)
         {
-            List<ITextureAtlas> materials = new List<ITextureAtlas>();
+            List<int> materials = new List<int>();
 
             foreach (var pos in BlockIterator(properties.ChunkSize.Value))
             {
                 var type = properties.GetBlock(pos);
 
-                if (type.IsVisible)
+                if (!type.IsVisible)
+                    continue;
+
+                for (int j = 0; j < 6; j++)
                 {
-                    for (int j = 0; j < 6; j++)
-                    {
-                        var face = type.Face(j);
-                        var atlas = face.Texture?.Atlas;
+                    var material = type.GetMaterialID(j);
+                    if (materials.Contains(material))
+                        continue;
 
-                        if (atlas == null || materials.Contains(atlas))
-                            continue;
-
-                        materials.Add(atlas);
-                        taskStack.AddVisualTask(new VisualRemeshTask(properties, atlas));
-                    }
+                    materials.Add(material);
+                    taskStack.AddTask(new VisualRemeshTask(properties, material));
                 }
             }
         }
@@ -49,7 +47,7 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <param name="properties">The chunk properties.</param>
         /// <param name="tasks">The task list to add to.</param>
-        private void GenerateCollision(IChunkProperties properties, RemeshTaskStack taskStack)
+        private void GenerateCollision(ChunkProperties properties, RemeshTaskStack taskStack)
         {
             foreach (var pos in BlockIterator(properties.ChunkSize.Value))
             {
@@ -57,7 +55,7 @@ namespace Bones3Rebuilt
 
                 if (type.IsSolid)
                 {
-                    taskStack.AddCollisionTask(new CollisionRemeshTask(properties));
+                    taskStack.AddTask(new CollisionRemeshTask(properties));
                     return;
                 }
             }
@@ -68,7 +66,7 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <param name="chunkSize">The size of the chunk.</param>
         /// <returns>The block position iterator.</returns>
-        IEnumerable<BlockPosition> BlockIterator(int chunkSize)
+        private IEnumerable<BlockPosition> BlockIterator(int chunkSize)
         {
             for (int x = 0; x < chunkSize; x++)
                 for (int y = 0; y < chunkSize; y++)

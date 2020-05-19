@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using Bones3Rebuilt;
-using Bones3Rebuilt.Util;
+using Bones3Rebuilt.Remeshing;
 using System;
 
 namespace Test
@@ -143,7 +143,7 @@ namespace Test
         [Test]
         public void PropertyCount()
         {
-            Assert.AreEqual(5, typeof(ProcMesh).GetProperties().Length);
+            Assert.AreEqual(4, typeof(ProcMesh).GetProperties().Length);
         }
     }
 }

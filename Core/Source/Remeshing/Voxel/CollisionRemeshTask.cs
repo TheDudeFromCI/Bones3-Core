@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// Generates the voxel collision mesh for a chunk.
@@ -6,12 +6,12 @@ namespace Bones3Rebuilt
     public class CollisionRemeshTask : VoxelChunkMesher
     {
         /// <inheritdoc cref="VoxelChunkMesher"/>
-        public CollisionRemeshTask(IChunkProperties chunkProperties) :
+        public CollisionRemeshTask(ChunkProperties chunkProperties) :
             base(chunkProperties, true, false)
         { }
 
         /// <inheritdoc cref="VoxelChunkMesher"/>
-        public override bool CanPlaceQuad(IChunkProperties chunkProperties, BlockPosition pos, int side)
+        public override bool CanPlaceQuad(ChunkProperties chunkProperties, BlockPosition pos, int side)
         {
             var block = chunkProperties.GetBlock(pos);
             if (!block.IsSolid)

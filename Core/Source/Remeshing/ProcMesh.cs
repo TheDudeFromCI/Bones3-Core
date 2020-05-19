@@ -1,8 +1,10 @@
 using System.Collections.Generic;
-using Bones3Rebuilt.Util;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
+    /// <summary>
+    /// A collection of data which is used to make up a mesh object.
+    /// </summary>
     public class ProcMesh
     {
         /// <summary>
@@ -28,36 +30,5 @@ namespace Bones3Rebuilt
         /// </summary>
         /// <value>The triangle list.</value>
         public List<int> Triangles { get; } = new List<int>();
-
-        /// <summary>
-        /// Checks if this mesh has any triangle data or not.
-        /// </summary>
-        public bool HasTriangles => Triangles.Count > 0;
-
-        /// <summary>
-        /// Clears all mesh data.
-        /// </summary>
-        public void Clear()
-        {
-            Vertices.Clear();
-            Normals.Clear();
-            UVs.Clear();
-            Triangles.Clear();
-        }
-
-        /// <summary>
-        /// Adds all data from another proc mesh to this mesh.
-        /// </summary>
-        /// <param name="other">The other mesh.</param>
-        public void AddData(ProcMesh other)
-        {
-            if (other == null)
-                return;
-
-            Vertices.AddRange(other.Vertices);
-            Normals.AddRange(other.Normals);
-            UVs.AddRange(other.UVs);
-            Triangles.AddRange(other.Triangles);
-        }
     }
 }
