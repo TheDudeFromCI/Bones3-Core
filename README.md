@@ -6,7 +6,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_Bones3-Rebuilt&metric=bugs&token=3e2eaab6c05d5b0ecb3ad879240c116fef9e4b96)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_Bones3-Rebuilt)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_Bones3-Rebuilt&metric=vulnerabilities&token=3e2eaab6c05d5b0ecb3ad879240c116fef9e4b96)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_Bones3-Rebuilt)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_Bones3-Rebuilt&metric=sqale_index&token=3e2eaab6c05d5b0ecb3ad879240c116fef9e4b96)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_Bones3-Rebuilt)
-[![BCH compliance](https://bettercodehub.com/edge/badge/TheDudeFromCI/Bones3-Rebuilt?branch=master&token=dbbd7c4aa7a4fd11fc28b25c75f80173af71614e)](https://bettercodehub.com/)
+[![BCH compliance](https://bettercodehub.com/edge/badge/Wraithaven-UnityTools/Bones3-Core?branch=master)](https://bettercodehub.com/)
 
 ---
 
