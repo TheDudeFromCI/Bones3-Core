@@ -23,7 +23,8 @@ namespace Bones3Rebuilt.Remeshing
 
         /// <summary>
         /// Prepares this chunk properties for a chunk with the given size and position. This
-        /// should only be called by the main thread when tasks are not actively using it.
+        /// should only be called by the main thread when tasks are not actively using it. This
+        /// method will also clear all block data currently stored.
         /// </summary>
         /// <param name="chunkPos">The chunk position.</param>
         /// <param name="chunkSize">The chunk size.</param>
@@ -42,6 +43,11 @@ namespace Bones3Rebuilt.Remeshing
 
             if (m_Blocks.Length < blockCount)
                 m_Blocks = new IMeshBlockDetails[blockCount];
+            else
+            {
+                for (int i = 0; i < m_Blocks.Length; i++)
+                    m_Blocks[i] = null;
+            }
         }
 
         /// <summary>
@@ -75,12 +81,45 @@ namespace Bones3Rebuilt.Remeshing
         /// <returns>The block index.</returns>
         private int BlockIndex(BlockPosition pos)
         {
+            if (IsCorners(pos) || IsOutOfBounds(pos))
+                throw new System.ArgumentException("Block position out of range!", "pos");
+
             int j = GetChunkSide(pos);
 
             if (j == -1)
                 return pos.Index(ChunkSize);
 
             return GetNextBlock(pos, j);
+        }
+
+        /// <summary>
+        /// Checks if the block position is on the corner of 3 or more relevant chunks.
+        /// </summary>
+        /// <param name="pos">The block position.</param>
+        /// <returns>True if the block position is touching 3 or more relevant chunks.</returns>
+        private bool IsCorners(BlockPosition pos)
+        {
+            int n = 0;
+
+            if (pos.X < 0 || pos.X >= ChunkSize.Value) n++;
+            if (pos.Y < 0 || pos.Y >= ChunkSize.Value) n++;
+            if (pos.Z < 0 || pos.Z >= ChunkSize.Value) n++;
+
+            return n > 1;
+        }
+
+        /// <summary>
+        /// Checks if the position is more than one block away from the check.
+        /// </summary>
+        /// <param name="pos">The block position.</param>
+        /// <returns>True if the block position is too far from the chunk.</returns>
+        private bool IsOutOfBounds(BlockPosition pos)
+        {
+            if (pos.X < -1 || pos.X > ChunkSize.Value) return true;
+            if (pos.Y < -1 || pos.Y > ChunkSize.Value) return true;
+            if (pos.Z < -1 || pos.Z > ChunkSize.Value) return true;
+
+            return false;
         }
 
         /// <summary>

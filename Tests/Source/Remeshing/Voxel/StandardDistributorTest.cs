@@ -5,213 +5,125 @@ using Bones3Rebuilt;
 using Moq;
 
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Test
 {
-    public class StandardDistributorTest
+    public class StandardDistributorTest : VoxelTest
     {
         [Test]
         public void ChunkAllAir_GeneratesNoTasks()
         {
-            var dis = new StandardDistributor();
-            var props = new Mock<ChunkProperties>();
-            props.Setup(p => p.ChunkSize).Returns(new GridSize(2));
+            // Arrange
+            var remeshHandler = new RemeshHandler();
+            remeshHandler.AddDistributor(new StandardDistributor());
 
-            var block = new BlockBuilder(1)
-                .Name("Air")
-                .Solid(false)
-                .Visible(false)
-                .Build();
+            // Act
+            remeshHandler.RemeshChunk(ChunkProperties);
+            List<RemeshTaskStack> tasks = new List<RemeshTaskStack>();
+            remeshHandler.FinishTasks(tasks);
 
-            props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).Returns(block);
-
-            var taskStack = new RemeshTaskStack(default);
-            dis.CreateTasks(props.Object, taskStack);
-
-            var report = taskStack.ToReport();
-            Assert.AreEqual(0, report.VisualMesh.TotalLayers);
-            Assert.AreEqual(0, report.CollisionMesh.TotalLayers);
+            // Assert
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual(0, tasks[0].TaskCount);
         }
 
         [Test]
         public void SomeVisible_NoSolid()
         {
-            var dis = new StandardDistributor();
-            var props = new Mock<ChunkProperties>();
-            props.Setup(p => p.ChunkSize).Returns(new GridSize(3));
+            // Arrange
+            ChunkProperties.SetBlock(Pos(1, 1, 1), NoCollisionBlock);
+            ChunkProperties.SetBlock(Pos(2, 1, 2), NoCollisionBlock);
+            ChunkProperties.SetBlock(Pos(3, 1, 3), NoCollisionBlock);
 
-            var air = new BlockBuilder(1)
-                .Name("Air")
-                .Solid(false)
-                .Visible(false)
-                .Build();
+            var remeshHandler = new RemeshHandler();
+            remeshHandler.AddDistributor(new StandardDistributor());
 
-            var tallGrass = new BlockBuilder(13)
-                .Name("Tall Grass")
-                .Solid(false)
-                .Visible(true)
-                .Texture(0, NewTexture())
-                .Build();
+            // Act
+            remeshHandler.RemeshChunk(ChunkProperties);
+            List<RemeshTaskStack> tasks = new List<RemeshTaskStack>();
+            remeshHandler.FinishTasks(tasks);
 
-            props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
-            Returns<BlockPosition>(pos =>
-            {
-                if (pos.Z == 5)
-                    return tallGrass;
-                else
-                    return air;
-            });
-
-            props.Setup(p => p.GetNextBlock(It.IsAny<BlockPosition>(), It.IsAny<int>())).
-            Returns<BlockPosition, int>((pos, side) =>
-            {
-                pos.ShiftAlongDirection(side);
-
-                if (pos.Z == 5)
-                    return tallGrass;
-                else
-                    return air;
-            });
-
-            var taskStack = new RemeshTaskStack(default);
-            dis.CreateTasks(props.Object, taskStack);
-
-            var report = taskStack.ToReport();
-            Assert.AreEqual(1, report.VisualMesh.TotalLayers);
-            Assert.AreEqual(0, report.CollisionMesh.TotalLayers);
+            // Assert
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual(1, tasks[0].TaskCount);
+            Assert.IsInstanceOf<VisualRemeshTask>(tasks[0].GetTask(0));
         }
 
         [Test]
         public void SomeSolid_NoVisible()
         {
-            var dis = new StandardDistributor();
-            var props = new Mock<ChunkProperties>();
-            props.Setup(p => p.ChunkSize).Returns(new GridSize(6));
+            // Arrange
+            ChunkProperties.SetBlock(Pos(1, 1, 5), InvisibleBlock);
+            ChunkProperties.SetBlock(Pos(2, 2, 4), InvisibleBlock);
+            ChunkProperties.SetBlock(Pos(3, 3, 3), InvisibleBlock);
 
-            var air = new BlockBuilder(1)
-                .Name("Air")
-                .Solid(false)
-                .Visible(false)
-                .Build();
+            var remeshHandler = new RemeshHandler();
+            remeshHandler.AddDistributor(new StandardDistributor());
 
-            var wall = new BlockBuilder(3)
-                .Name("Invisible Wall")
-                .Solid(true)
-                .Visible(false)
-                .Build();
+            // Act
+            remeshHandler.RemeshChunk(ChunkProperties);
+            List<RemeshTaskStack> tasks = new List<RemeshTaskStack>();
+            remeshHandler.FinishTasks(tasks);
 
-            props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
-            Returns<BlockPosition>(pos =>
-            {
-                if (pos.X == 7)
-                    return wall;
-                else
-                    return air;
-            });
-
-            var taskStack = new RemeshTaskStack(default);
-            dis.CreateTasks(props.Object, taskStack);
-
-            var report = taskStack.ToReport();
-            Assert.AreEqual(0, report.VisualMesh.TotalLayers);
-            Assert.AreEqual(1, report.CollisionMesh.TotalLayers);
+            // Assert
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual(1, tasks[0].TaskCount);
+            Assert.IsInstanceOf<CollisionRemeshTask>(tasks[0].GetTask(0));
         }
 
         [Test]
         public void StandardChunk()
         {
-            var dis = new StandardDistributor();
-            var props = new Mock<ChunkProperties>();
-            props.Setup(p => p.ChunkSize).Returns(new GridSize(4));
+            // Arrange
+            ChunkProperties.SetBlock(Pos(4, 4, 5), NormalBlock);
+            ChunkProperties.SetBlock(Pos(4, 5, 5), NormalBlock);
+            ChunkProperties.SetBlock(Pos(5, 5, 5), NormalBlock);
 
-            var air = new BlockBuilder(1)
-                .Name("Air")
-                .Solid(false)
-                .Visible(false)
-                .Build();
+            var remeshHandler = new RemeshHandler();
+            remeshHandler.AddDistributor(new StandardDistributor());
 
-            var grass = new BlockBuilder(5)
-                .Name("Grass")
-                .Solid(true)
-                .Visible(true)
-                .Texture(0, NewTexture())
-                .Build();
+            // Act
+            remeshHandler.RemeshChunk(ChunkProperties);
+            List<RemeshTaskStack> tasks = new List<RemeshTaskStack>();
+            remeshHandler.FinishTasks(tasks);
 
-            props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
-            Returns<BlockPosition>(pos =>
-            {
-                if (pos.Y == 1)
-                    return grass;
-                else
-                    return air;
-            });
-
-            props.Setup(p => p.GetNextBlock(It.IsAny<BlockPosition>(), It.IsAny<int>())).
-            Returns<BlockPosition, int>((pos, side) =>
-            {
-                pos.ShiftAlongDirection(side);
-
-                if (pos.Y == 1)
-                    return grass;
-                else
-                    return air;
-            });
-
-            var taskStack = new RemeshTaskStack(default);
-            dis.CreateTasks(props.Object, taskStack);
-
-            var report = taskStack.ToReport();
-            Assert.AreEqual(1, report.VisualMesh.TotalLayers);
-            Assert.AreEqual(1, report.CollisionMesh.TotalLayers);
-        }
-
-        private IBlockTexture NewTexture()
-        {
-            var texture = new Mock<IBlockTexture>();
-            var atlas = new Mock<ITextureAtlas>();
-
-            texture.Setup(t => t.Atlas).Returns(atlas.Object);
-
-            return texture.Object;
+            // Assert
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual(2, tasks[0].TaskCount);
+            Assert.IsInstanceOf<VisualRemeshTask>(tasks[0].GetTask(0));
+            Assert.IsInstanceOf<CollisionRemeshTask>(tasks[0].GetTask(1));
         }
 
         [Test]
-        public void ThreeInputsAtlases_ThreeOutputLayers()
+        public void TwoInputsMaterials_ThreeOutputTasks()
         {
-            var dis = new StandardDistributor();
-            var props = new Mock<ChunkProperties>();
-            props.Setup(p => p.ChunkSize).Returns(new GridSize(4));
+            // Arrange
+            ChunkProperties.SetBlock(Pos(1, 1, 1), NormalBlock);
+            ChunkProperties.SetBlock(Pos(2, 2, 2), NormalBlock);
+            ChunkProperties.SetBlock(Pos(3, 3, 3), NormalBlock);
+            ChunkProperties.SetBlock(Pos(4, 4, 4), NormalBlock);
+            ChunkProperties.SetBlock(Pos(5, 5, 5), DifferentMaterialBlock);
+            ChunkProperties.SetBlock(Pos(6, 6, 6), DifferentMaterialBlock);
+            ChunkProperties.SetBlock(Pos(7, 7, 7), DifferentMaterialBlock);
 
-            var air = new BlockBuilder(1)
-                .Name("Air")
-                .Solid(false)
-                .Visible(false)
-                .Build();
+            var remeshHandler = new RemeshHandler();
+            remeshHandler.AddDistributor(new StandardDistributor());
 
-            var grass = new BlockBuilder(5)
-                .Name("Grass")
-                .Solid(true)
-                .Visible(true)
-                .Texture(0, NewTexture())
-                .Texture(1, NewTexture())
-                .Texture(2, NewTexture())
-                .Build();
+            // Act
+            remeshHandler.RemeshChunk(ChunkProperties);
+            List<RemeshTaskStack> tasks = new List<RemeshTaskStack>();
+            remeshHandler.FinishTasks(tasks);
 
-            props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
-            Returns<BlockPosition>(pos =>
-            {
-                if (pos.Y == 1)
-                    return grass;
-                else
-                    return air;
-            });
+            // Assert
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual(3, tasks[0].TaskCount);
+            Assert.IsInstanceOf<VisualRemeshTask>(tasks[0].GetTask(0));
+            Assert.IsInstanceOf<VisualRemeshTask>(tasks[0].GetTask(1));
+            Assert.IsInstanceOf<CollisionRemeshTask>(tasks[0].GetTask(2));
 
-            var taskStack = new RemeshTaskStack(default);
-            dis.CreateTasks(props.Object, taskStack);
-
-            var report = taskStack.ToReport();
-            Assert.AreEqual(3, report.VisualMesh.TotalLayers);
-            Assert.AreEqual(1, report.CollisionMesh.TotalLayers);
+            Assert.AreEqual(0, (tasks[0].GetTask(0) as VisualRemeshTask).MaterialID);
+            Assert.AreEqual(1, (tasks[0].GetTask(1) as VisualRemeshTask).MaterialID);
         }
     }
 }

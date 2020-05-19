@@ -1,23 +1,20 @@
 using NUnit.Framework;
-using Bones3Rebuilt;
+using Bones3Rebuilt.Remeshing;
 using Moq;
+using System.Collections.Generic;
 
 namespace Test
 {
     public class RemeshHandlerTest
     {
         [Test]
-        public void AddRemove_Distributor()
+        public void Add_Distributor()
         {
             var handler = new RemeshHandler();
             var distributor = new Mock<IRemeshDistributor>();
-            var chunkProperties = new Mock<IChunkProperties>();
+            var chunkProperties = new Mock<ChunkProperties>();
 
             handler.AddDistributor(distributor.Object);
-            handler.RemeshChunk(chunkProperties.Object);
-            distributor.Verify(dis => dis.CreateTasks(chunkProperties.Object, It.IsAny<RemeshTaskStack>()), Times.Once);
-
-            handler.RemoveDistributor(distributor.Object);
             handler.RemeshChunk(chunkProperties.Object);
             distributor.Verify(dis => dis.CreateTasks(chunkProperties.Object, It.IsAny<RemeshTaskStack>()), Times.Once);
         }
@@ -27,69 +24,30 @@ namespace Test
         {
             var handler = new RemeshHandler();
             var distributor = new Mock<IRemeshDistributor>();
-            var chunkProperties = new Mock<IChunkProperties>();
+            var chunkProperties = new Mock<ChunkProperties>();
 
-            var task0 = new Mock<IVisualRemeshTask>();
-            var task1 = new Mock<IVisualRemeshTask>();
+            var task0 = new Mock<IRemeshTask>();
+            var task1 = new Mock<IRemeshTask>();
             var task2 = new Mock<IRemeshTask>();
 
             distributor.Setup(dis => dis.CreateTasks(chunkProperties.Object, It.IsAny<RemeshTaskStack>()))
-                .Callback<IChunkProperties, RemeshTaskStack>((properties, taskStack) =>
+                .Callback<ChunkProperties, RemeshTaskStack>((properties, taskStack) =>
                  {
-                     taskStack.AddVisualTask(task0.Object);
-                     taskStack.AddVisualTask(task1.Object);
-                     taskStack.AddCollisionTask(task2.Object);
+                     taskStack.AddTask(task0.Object);
+                     taskStack.AddTask(task1.Object);
+                     taskStack.AddTask(task2.Object);
                  });
 
             handler.AddDistributor(distributor.Object);
             handler.RemeshChunk(chunkProperties.Object);
 
-            handler.FinishTasks();
-            handler.FinishTasks();
+            List<RemeshTaskStack> taskStacks = new List<RemeshTaskStack>();
+            handler.FinishTasks(taskStacks);
 
             task0.Verify(t => t.Finish(), Times.Once);
             task1.Verify(t => t.Finish(), Times.Once);
             task2.Verify(t => t.Finish(), Times.Once);
-        }
-
-        [Test]
-        public void ThrowsRemeshEvent()
-        {
-            var handler = new RemeshHandler();
-            var distributor = new Mock<IRemeshDistributor>();
-            var chunkProperties = new Mock<IChunkProperties>();
-
-            var task0 = new Mock<IVisualRemeshTask>();
-            var task1 = new Mock<IVisualRemeshTask>();
-            var task2 = new Mock<IRemeshTask>();
-
-            task0.Setup(t => t.Mesh).Returns(new ProcMesh());
-            task1.Setup(t => t.Mesh).Returns(new ProcMesh());
-            task2.Setup(t => t.Mesh).Returns(new ProcMesh());
-
-            distributor.Setup(dis => dis.CreateTasks(chunkProperties.Object, It.IsAny<RemeshTaskStack>()))
-                .Callback<IChunkProperties, RemeshTaskStack>((properties, taskStack) =>
-                 {
-                     taskStack.AddVisualTask(task0.Object);
-                     taskStack.AddVisualTask(task1.Object);
-                     taskStack.AddCollisionTask(task2.Object);
-                 });
-
-            handler.AddDistributor(distributor.Object);
-            handler.RemeshChunk(chunkProperties.Object);
-
-            int calls = 0;
-            handler.OnRemeshFinish += ev =>
-            {
-                calls++;
-
-                Assert.AreEqual(2, ev.Report.VisualMesh.TotalLayers);
-                Assert.AreEqual(1, ev.Report.CollisionMesh.TotalLayers);
-            };
-
-            handler.FinishTasks();
-
-            Assert.AreEqual(1, calls);
+            Assert.AreEqual(1, taskStacks.Count);
         }
     }
 }

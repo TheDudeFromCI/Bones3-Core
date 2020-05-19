@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Bones3Rebuilt.Remeshing;
 using Bones3Rebuilt;
 using Moq;
 
@@ -7,75 +8,53 @@ namespace Test
     public class ChunkPropertiesTest
     {
         [Test]
-        public void AnalyzeChunk()
+        public void SetBlock_GetBlock()
         {
-            var gridSize = new GridSize(4);
-            var chunkPosition = new ChunkPosition(0, 0, 0);
-            var chunk = new Chunk(gridSize, chunkPosition);
+            // Arrange
+            var blockType1 = new Mock<IMeshBlockDetails>();
+            var blockType2 = new Mock<IMeshBlockDetails>();
+            var blockType3 = new Mock<IMeshBlockDetails>();
+            var blockPos1 = new BlockPosition(1, 1, 4);
+            var blockPos2 = new BlockPosition(2, 2, 3);
+            var blockPos3 = new BlockPosition(3, 3, 2);
+            var blockPos4 = new BlockPosition(4, 4, 1);
 
-            chunk.SetBlockID(new BlockPosition(1, 1, 1), 1);
-            chunk.SetBlockID(new BlockPosition(2, 2, 2), 2);
-            chunk.SetBlockID(new BlockPosition(3, 3, 3), 3);
+            var chunkSize = new GridSize(3);
+            var chunkPos = new ChunkPosition(1, 3, 6);
+            var props = new ChunkProperties();
 
-            var world = new Mock<IBlockContainerProvider>();
-            world.Setup(w => w.GetContainer(chunkPosition, It.IsAny<bool>())).Returns(chunk);
-            world.Setup(w => w.ContainerSize).Returns(gridSize);
+            // Act
+            props.Reset(chunkPos, chunkSize);
+            props.SetBlock(blockPos1, blockType1.Object);
+            props.SetBlock(blockPos2, blockType2.Object);
+            props.SetBlock(blockPos3, blockType3.Object);
 
-            var blockList = new BlockTypeList();
-            blockList.AddBlockType(new BlockBuilder(2).Build());
-            blockList.AddBlockType(new BlockBuilder(3).Build());
-
-            var props = new ChunkProperties(world.Object, chunkPosition, blockList);
-
-            Assert.AreEqual(blockList.GetBlockType(0), props.GetBlock(new BlockPosition(0, 0, 0)));
-            Assert.AreEqual(blockList.GetBlockType(1), props.GetBlock(new BlockPosition(1, 1, 1)));
-            Assert.AreEqual(blockList.GetBlockType(2), props.GetBlock(new BlockPosition(2, 2, 2)));
-            Assert.AreEqual(blockList.GetBlockType(3), props.GetBlock(new BlockPosition(3, 3, 3)));
+            // Assert
+            Assert.AreEqual(blockType1.Object, props.GetBlock(blockPos1));
+            Assert.AreEqual(blockType2.Object, props.GetBlock(blockPos2));
+            Assert.AreEqual(blockType3.Object, props.GetBlock(blockPos3));
+            Assert.AreEqual(null, props.GetBlock(blockPos4));
         }
 
         [Test]
-        public void AnalyzeChunkNeighbors()
+        public void SetBlock_ResetChunk_GetBlock_ReturnsNull()
         {
-            var gridSize = new GridSize(4);
-            var chunkPosition = new ChunkPosition(0, 0, 0);
-            var chunk = new Chunk(gridSize, chunkPosition);
+            // Arrange
+            var blockType = new Mock<IMeshBlockDetails>();
+            var blockPos = new BlockPosition(1, 1, 4);
 
-            var neighborPosition = new ChunkPosition(0, 1, 0);
-            var neighbor = new Chunk(gridSize, neighborPosition);
-            neighbor.SetBlockID(new BlockPosition(0, 0, 0), 1);
+            var chunkSize = new GridSize(3);
+            var chunkPos1 = new ChunkPosition(1, 3, 6);
+            var chunkPos2 = new ChunkPosition(17, -123, 12999);
+            var props = new ChunkProperties();
 
-            var world = new Mock<IBlockContainerProvider>();
-            world.Setup(w => w.GetContainer(chunkPosition, It.IsAny<bool>())).Returns(chunk);
-            world.Setup(w => w.GetContainer(neighborPosition, It.IsAny<bool>())).Returns(neighbor);
-            world.Setup(w => w.ContainerSize).Returns(gridSize);
+            // Act
+            props.Reset(chunkPos1, chunkSize);
+            props.SetBlock(blockPos, blockType.Object);
+            props.Reset(chunkPos2, chunkSize);
 
-            var blockList = new BlockTypeList();
-
-            var props = new ChunkProperties(world.Object, chunkPosition, blockList);
-
-            Assert.AreEqual(blockList.GetBlockType(1), props.GetNextBlock(new BlockPosition(0, 15, 0), 2));
-            Assert.AreEqual(blockList.GetBlockType(0), props.GetNextBlock(new BlockPosition(1, 15, 1), 2));
-        }
-
-        [Test]
-        public void GetNeighbor()
-        {
-            var gridSize = new GridSize(4);
-            var chunkPosition = new ChunkPosition(0, 0, 0);
-            var chunk = new Chunk(gridSize, chunkPosition);
-
-            chunk.SetBlockID(new BlockPosition(5, 5, 5), 1);
-
-            var world = new Mock<IBlockContainerProvider>();
-            world.Setup(w => w.GetContainer(chunkPosition, It.IsAny<bool>())).Returns(chunk);
-            world.Setup(w => w.ContainerSize).Returns(gridSize);
-
-            var blockList = new BlockTypeList();
-
-            var props = new ChunkProperties(world.Object, chunkPosition, blockList);
-
-            Assert.AreEqual(blockList.GetBlockType(1), props.GetNextBlock(new BlockPosition(5, 4, 5), 2));
-            Assert.AreEqual(blockList.GetBlockType(0), props.GetNextBlock(new BlockPosition(5, 5, 5), 2));
+            // Assert
+            Assert.AreEqual(null, props.GetBlock(blockPos));
         }
     }
 }
