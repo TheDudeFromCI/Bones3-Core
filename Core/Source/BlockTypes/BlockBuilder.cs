@@ -1,4 +1,6 @@
-namespace Bones3Rebuilt
+using Bones3Rebuilt.DataTypes;
+
+namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
     /// A builder for creating block types.

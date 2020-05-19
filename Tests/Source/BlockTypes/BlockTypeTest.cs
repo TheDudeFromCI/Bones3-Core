@@ -1,6 +1,6 @@
-using System;
-
 using Bones3Rebuilt;
+using Bones3Rebuilt.BlockTypes;
+using Bones3Rebuilt.DataTypes;
 using Moq;
 using NUnit.Framework;
 

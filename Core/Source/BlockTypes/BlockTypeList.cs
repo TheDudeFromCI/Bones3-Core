@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
     /// A list of block properties which are used to make up a world.
     /// </summary>
-    public class BlockTypeList : IBlockTypeList
+    public class BlockTypeList
     {
         /// <summary>
         /// The maximum number of block types which can be added to this list.
@@ -14,11 +14,17 @@ namespace Bones3Rebuilt
 
         private readonly List<BlockType> m_BlockTypes = new List<BlockType>();
 
-        /// <inheritdoc cref="IBlockTypeList"/>
+        /// <summary>
+        /// The number of block types currently in this list.
+        /// </summary>
+        /// <value>The number of block types.</value>
         public int Count => m_BlockTypes.Count;
 
-        /// <inheritdoc cref="IBlockTypeList"/>
-        public ushort NextBlockID => (ushort) Count;
+        /// <summary>
+        /// Gets the next available block ID within this list.
+        /// </summary>
+        /// <returns>The next available block ID.</returns>
+        public ushort NextBlockID => (ushort)Count;
 
         /// <summary>
         /// Creates a new block type list and initializes it with ungenerated and air blocks.
@@ -38,13 +44,26 @@ namespace Bones3Rebuilt
                 .Build());
         }
 
-        /// <inheritdoc cref="IBlockTypeList"/>
+        /// <summary>
+        /// Gets the block type with the given ID.
+        /// </summary>
+        /// <param name="id">The block id.</param>
         public BlockType GetBlockType(ushort id)
         {
-            return m_BlockTypes[id];;
+            return m_BlockTypes[id]; ;
         }
 
-        /// <inheritdoc cref="IBlockTypeList"/>
+        /// <summary>
+        /// Adds a new block type to this list.
+        /// </summary>
+        /// <param name="blockType">The block type to add.</param>
+        /// <exception cref="System.ArgumentException">
+        /// If the block count is currently at MAX_BLOCK_TYPES.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// If the block's ID does not match the NextAvailableID property
+        /// of this list.
+        /// </exception>
         public void AddBlockType(BlockType blockType)
         {
             if (Count == MAX_BLOCK_TYPES)
@@ -56,7 +75,13 @@ namespace Bones3Rebuilt
             m_BlockTypes.Add(blockType);
         }
 
-        /// <inheritdoc cref="IBlockTypeList"/>
+        /// <summary>
+        /// Removes a block type from this list.
+        /// </summary>
+        /// <param name="blockType">The block type to remove.</param>
+        /// <exception cref="System.AccessViolationException">
+        /// If the block type is protected.
+        /// </exception>
         public void RemoveBlockType(BlockType blockType)
         {
             if (blockType == null)

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Bones3Rebuilt.DataTypes;
 
 namespace Bones3Rebuilt.Remeshing.Voxel
 {
