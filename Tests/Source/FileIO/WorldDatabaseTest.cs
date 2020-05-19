@@ -1,4 +1,5 @@
 using Bones3Rebuilt;
+using Bones3Rebuilt.World;
 using NUnit.Framework;
 using System.IO;
 

@@ -1,21 +1,22 @@
 using System.IO;
 using System.Threading.Tasks;
+using Bones3Rebuilt.World;
 
 namespace Bones3Rebuilt
 {
     /// <summary>
     /// Used to maintain the saving and loading of block containers.
     /// </summary>
-    public class BlockContainerHandler : IFileHandler<IBlockContainer>
+    public class BlockContainerHandler : IFileHandler<Chunk>
     {
         /// <inheritdoc cref="IFileHandler{T}"/>
-        public IFileLoadTask<IBlockContainer> Load(string rootFolder, IBlockContainer obj = null)
+        public IFileLoadTask<Chunk> Load(string rootFolder, Chunk obj = null)
         {
             throw new System.NotImplementedException();
         }
 
         /// <inheritdoc cref="IFileHandler{T}"/>
-        public IFileSaveTask<IBlockContainer> Save(string rootFolder, IBlockContainer obj)
+        public IFileSaveTask<Chunk> Save(string rootFolder, Chunk obj)
         {
             throw new System.NotImplementedException();
         }
@@ -24,7 +25,7 @@ namespace Bones3Rebuilt
     /// <summary>
     /// A background task for saving block containers.
     /// </summary>
-    public class BlockContainerSaveTask : IFileSaveTask<IBlockContainer>
+    public class BlockContainerSaveTask : IFileSaveTask<Chunk>
     {
         /// <summary>
         /// An identifier for handling file versioning, to aid in future-proofing.
@@ -37,7 +38,7 @@ namespace Bones3Rebuilt
         private readonly string m_File;
         private readonly GridSize m_Size;
 
-        public BlockContainerSaveTask(string rootFolder, IBlockContainer container)
+        public BlockContainerSaveTask(string rootFolder, Chunk container)
         {
             m_File = rootFolder + DetermineRegionFile(container.Position);
             m_Size = container.Size;
@@ -66,7 +67,7 @@ namespace Bones3Rebuilt
         /// Copies all of the block data from the container.
         /// </summary>
         /// <param name="container">The container to read from.</param>
-        private void CopyBlocks(IBlockContainer container)
+        private void CopyBlocks(Chunk container)
         {
             for (int x = 0; x < m_Size.Value; x++)
             {
@@ -117,7 +118,7 @@ namespace Bones3Rebuilt
         }
     }
 
-    public class BlockContainerLoadTask : IFileLoadTask<IBlockContainer>
+    public class BlockContainerLoadTask : IFileLoadTask<Chunk>
     {
         public FileLoadStatus FinishTask()
         {

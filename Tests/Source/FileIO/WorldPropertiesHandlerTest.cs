@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Bones3Rebuilt;
 using System.IO;
+using Bones3Rebuilt.World;
 
 namespace Test
 {

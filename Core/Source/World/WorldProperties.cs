@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.World
 {
     /// <summary>
     /// A series of properties which are used to define a voxel world.
