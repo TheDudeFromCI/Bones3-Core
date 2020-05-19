@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Bones3Rebuilt.Remeshing;
-using Bones3Rebuilt.DataTypes;
 using Bones3Rebuilt;
 using Moq;
 

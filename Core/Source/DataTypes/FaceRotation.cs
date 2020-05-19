@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt.DataTypes
+namespace Bones3Rebuilt
 {
     /// <summary>
     /// The rotation of a block face's texture.

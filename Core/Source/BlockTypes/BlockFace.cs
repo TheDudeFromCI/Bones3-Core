@@ -1,6 +1,3 @@
-using Bones3Rebuilt.DataTypes;
-using Bones3Rebuilt;
-
 namespace Bones3Rebuilt.BlockTypes
 {
     /// <summary>
