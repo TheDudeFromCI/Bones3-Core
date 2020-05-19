@@ -16,5 +16,11 @@ namespace Bones3Rebuilt.World
         /// </summary>
         /// <value>The world name.</value>
         public string WorldName { get; set; }
+
+        /// <summary>
+        /// Gets the world file format style referencing how chunks are laid out.
+        /// </summary>
+        /// <value>The world file format style.</value>
+        public int WorldFileFormat { get; set; }
     }
 }

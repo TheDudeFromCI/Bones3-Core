@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Bones3Rebuilt.World;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database.WorldProps
 {
     /// <summary>
     /// Handles file IO for a world properties object.
@@ -59,6 +59,7 @@ namespace Bones3Rebuilt
 
                 writer.Write(m_WorldProperties.ChunkSize.IntBits);
                 writer.Write(m_WorldProperties.WorldName);
+                writer.Write(m_WorldProperties.WorldFileFormat);
             }
         }
 
@@ -132,11 +133,13 @@ namespace Bones3Rebuilt
         {
             var chunkSize = new GridSize(reader.ReadInt32());
             var worldName = reader.ReadString();
+            var worldFileFormat = reader.ReadInt32();
 
             m_WorldProperties = new WorldProperties
             {
                 ChunkSize = chunkSize,
                 WorldName = worldName,
+                WorldFileFormat = worldFileFormat,
             };
         }
 
