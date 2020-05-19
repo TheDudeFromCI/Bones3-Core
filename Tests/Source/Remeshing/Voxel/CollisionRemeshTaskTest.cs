@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Bones3Rebuilt;
+using Bones3Rebuilt.Remeshing;
 using Moq;
 
 namespace Test

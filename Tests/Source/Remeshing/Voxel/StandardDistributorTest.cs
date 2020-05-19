@@ -1,3 +1,5 @@
+using Bones3Rebuilt.Remeshing.Voxel;
+using Bones3Rebuilt.Remeshing;
 using Bones3Rebuilt;
 
 using Moq;
@@ -12,7 +14,7 @@ namespace Test
         public void ChunkAllAir_GeneratesNoTasks()
         {
             var dis = new StandardDistributor();
-            var props = new Mock<IChunkProperties>();
+            var props = new Mock<ChunkProperties>();
             props.Setup(p => p.ChunkSize).Returns(new GridSize(2));
 
             var block = new BlockBuilder(1)
@@ -35,7 +37,7 @@ namespace Test
         public void SomeVisible_NoSolid()
         {
             var dis = new StandardDistributor();
-            var props = new Mock<IChunkProperties>();
+            var props = new Mock<ChunkProperties>();
             props.Setup(p => p.ChunkSize).Returns(new GridSize(3));
 
             var air = new BlockBuilder(1)
@@ -83,7 +85,7 @@ namespace Test
         public void SomeSolid_NoVisible()
         {
             var dis = new StandardDistributor();
-            var props = new Mock<IChunkProperties>();
+            var props = new Mock<ChunkProperties>();
             props.Setup(p => p.ChunkSize).Returns(new GridSize(6));
 
             var air = new BlockBuilder(1)
@@ -119,7 +121,7 @@ namespace Test
         public void StandardChunk()
         {
             var dis = new StandardDistributor();
-            var props = new Mock<IChunkProperties>();
+            var props = new Mock<ChunkProperties>();
             props.Setup(p => p.ChunkSize).Returns(new GridSize(4));
 
             var air = new BlockBuilder(1)
@@ -177,7 +179,7 @@ namespace Test
         public void ThreeInputsAtlases_ThreeOutputLayers()
         {
             var dis = new StandardDistributor();
-            var props = new Mock<IChunkProperties>();
+            var props = new Mock<ChunkProperties>();
             props.Setup(p => p.ChunkSize).Returns(new GridSize(4));
 
             var air = new BlockBuilder(1)
@@ -198,17 +200,6 @@ namespace Test
             props.Setup(p => p.GetBlock(It.IsAny<BlockPosition>())).
             Returns<BlockPosition>(pos =>
             {
-                if (pos.Y == 1)
-                    return grass;
-                else
-                    return air;
-            });
-
-            props.Setup(p => p.GetNextBlock(It.IsAny<BlockPosition>(), It.IsAny<int>())).
-            Returns<BlockPosition, int>((pos, side) =>
-            {
-                pos.ShiftAlongDirection(side);
-
                 if (pos.Y == 1)
                     return grass;
                 else

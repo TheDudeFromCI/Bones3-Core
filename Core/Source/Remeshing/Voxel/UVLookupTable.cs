@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using Bones3Rebuilt.Util;
 
-namespace Bones3Rebuilt
+using Bones3Rebuilt.Remeshing;
+
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A lookup table for uv coordinates for quads.

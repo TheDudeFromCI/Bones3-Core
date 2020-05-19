@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// An extension of remesh tasks which specifically target visual mesh generation.
@@ -6,9 +6,9 @@ namespace Bones3Rebuilt
     public interface IVisualRemeshTask : IRemeshTask
     {
         /// <summary>
-        /// Gets the texture atlas this remesh task is targeting.
+        /// Gets the material ID this remesh task is targeting.
         /// </summary>
-        /// <value>The texture atlas.</value>
-        ITextureAtlas Atlas { get; }
+        /// <value>The material ID.</value>
+        int MaterialID { get; }
     }
 }

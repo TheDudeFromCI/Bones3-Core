@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// The output data from a chunk remesh task.
@@ -26,11 +24,11 @@ namespace Bones3Rebuilt
         public LayeredProcMesh VisualMesh { get; }
 
         /// <summary>
-        /// Gets the array of texture atlases that were referenced in this remesh task,
+        /// Gets the array of material IDs that were referenced in this remesh task,
         /// corresponding to the layers within the visual mesh.
         /// </summary>
         /// <value>The texture atlas for each layer of the visual mesh.</value>
-        public ITextureAtlas[] Atlases { get; }
+        public int[] MaterialIDs { get; }
 
         /// <summary>
         /// Creates a new remesh report.
@@ -38,13 +36,13 @@ namespace Bones3Rebuilt
         /// <param name="chunkPosition">The position of the chunk that was targeted.</param>
         /// <param name="collisionMesh">The new collision mesh.</param>
         /// <param name="visualMesh">The new visual mesh.</param>
-        /// <param name="atlases">The array of referenced texture atlases.</param>
-        public RemeshReport(ChunkPosition chunkPosition, LayeredProcMesh collisionMesh, LayeredProcMesh visualMesh, ITextureAtlas[] atlases)
+        /// <param name="materialIDs">The array of referenced material IDs.</param>
+        public RemeshReport(ChunkPosition chunkPosition, LayeredProcMesh collisionMesh, LayeredProcMesh visualMesh, int[] materialIDs)
         {
             ChunkPosition = chunkPosition;
             CollisionMesh = collisionMesh;
             VisualMesh = visualMesh;
-            Atlases = atlases;
+            MaterialIDs = materialIDs;
         }
     }
 }

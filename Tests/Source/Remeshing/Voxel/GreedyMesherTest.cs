@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Bones3Rebuilt;
-using Bones3Rebuilt.Util;
+using Bones3Rebuilt.Remeshing.Voxel;
+using Bones3Rebuilt.Remeshing;
 using System.Linq;
 using System;
 

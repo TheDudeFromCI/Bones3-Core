@@ -1,20 +1,20 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Bones3Rebuilt
+using Bones3Rebuilt.Remeshing;
+
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// Iterates over a set of chunk properties in order to generate a chunk mesh.
     /// </summary>
     public abstract class VoxelChunkMesher : IRemeshTask
     {
-        private readonly IChunkProperties m_ChunkProperties;
+        private readonly ChunkProperties m_ChunkProperties;
         private readonly GreedyMesher m_GreedyMesher;
         private readonly bool m_WieldVertices;
         private readonly Task m_Task;
-
-        /// <inheritdoc cref="IRemeshTask"/>
-        public ProcMesh Mesh { get; }
+        private readonly ProcMesh m_Mesh;
 
         /// <summary>
         /// Creates a new voxel chunk mesher.
@@ -22,13 +22,13 @@ namespace Bones3Rebuilt
         /// <param name="chunkProperties">The chunk properties to handle.</param>
         /// <param name="wield">Whether or not to wield vertices after remeshing.</param>
         /// <param name="enableUVs">Whether or not to generate UVs in the mesh.</param>
-        public VoxelChunkMesher(IChunkProperties chunkProperties, bool wieldVertices, bool enableUVs)
+        public VoxelChunkMesher(ChunkProperties chunkProperties, bool wieldVertices, bool enableUVs)
         {
             m_ChunkProperties = chunkProperties;
             m_GreedyMesher = new GreedyMesher(chunkProperties.ChunkSize, enableUVs);
             m_WieldVertices = wieldVertices;
 
-            Mesh = new ProcMesh();
+            m_Mesh = new ProcMesh();
 
             m_Task = Task.Run(Remesh);
         }
@@ -56,9 +56,9 @@ namespace Bones3Rebuilt
                                 continue;
 
                             var type = m_ChunkProperties.GetBlock(pos);
-                            var face = type.Face(j);
-                            var rotation = SolveRotation(pos, face.Rotation);
-                            var quad = new GreedyMesher.Quad(rotation, face.Texture?.Index ?? 0);
+                            var texture = type.GetTextureID(j);
+                            var rotation = SolveRotation(pos, type.GetRotation(j));
+                            var quad = new GreedyMesher.Quad(rotation, texture);
 
                             m_GreedyMesher.SetQuad(a, b, quad);
                             planeActive = true;
@@ -66,12 +66,12 @@ namespace Bones3Rebuilt
                     }
 
                     if (planeActive)
-                        m_GreedyMesher.Mesh(t, j, Mesh);
+                        m_GreedyMesher.Mesh(t, j, m_Mesh);
                 }
             }
 
             if (m_WieldVertices)
-                Mesh.WieldVertices();
+                m_Mesh.WieldVertices();
         }
 
         /// <summary>
@@ -94,10 +94,10 @@ namespace Bones3Rebuilt
                 r = r * 25214903917 + 11;
                 r = r * 25214903917 + 11;
 
-                return (int)(r & 0x7);
+                return (int) (r & 0x7);
             }
 
-            return (int)rot;
+            return (int) rot;
         }
 
         /// <summary>
@@ -129,9 +129,10 @@ namespace Bones3Rebuilt
         }
 
         /// <inheritdoc cref="IRemeshTask"/>
-        public void Finish()
+        public ProcMesh Finish()
         {
             m_Task.Wait();
+            return m_Mesh;
         }
 
         /// <summary>
@@ -141,6 +142,6 @@ namespace Bones3Rebuilt
         /// <param name="pos">The block position.</param>
         /// <param name="side">The side of the block being checked.</param>
         /// <returns>True if the quad should be placed. False otherwise.</returns>
-        public abstract bool CanPlaceQuad(IChunkProperties chunkProperties, BlockPosition pos, int side);
+        public abstract bool CanPlaceQuad(ChunkProperties chunkProperties, BlockPosition pos, int side);
     }
 }

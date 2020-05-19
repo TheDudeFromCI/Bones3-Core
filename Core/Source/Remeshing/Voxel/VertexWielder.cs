@@ -1,6 +1,4 @@
-using System.Numerics;
-
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     public static class VertexWielder
     {
@@ -9,8 +7,8 @@ namespace Bones3Rebuilt
             bool hasNormals = mesh.Normals.Count > 0;
             bool hasUVs = mesh.UVs.Count > 0;
 
-            if ((hasNormals && mesh.Normals.Count != mesh.Vertices.Count)
-                || (hasUVs && mesh.UVs.Count != mesh.Vertices.Count))
+            if ((hasNormals && mesh.Normals.Count != mesh.Vertices.Count) ||
+                (hasUVs && mesh.UVs.Count != mesh.Vertices.Count))
                 throw new System.InvalidOperationException("Mesh does not contain equal vertex sizes!");
 
             for (int v = 0; v < mesh.Vertices.Count; v++)

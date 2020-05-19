@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// Holds a set of remesh distrbutors in order to generate a new mesh for a chunk.
     /// </summary>
-    public class RemeshHandler : IRemeshHandler
+    public class RemeshHandler
     {
         private readonly List<IRemeshDistributor> m_Distributors = new List<IRemeshDistributor>();
         private readonly List<RemeshTaskStack> m_ActiveTasks = new List<RemeshTaskStack>();
 
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public event RemeshFinishCallback OnRemeshFinish;
-
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public void RemeshChunk(IChunkProperties properties)
+        /// <summary>
+        /// Analyses the given chunk and starts a set of remesh tasks for handling that chunk.
+        /// </summary>
+        /// <param name="properties">The chunk properties to analyze.</param>
+        public void RemeshChunk(ChunkProperties properties)
         {
             var taskStack = new RemeshTaskStack(properties.ChunkPosition);
             m_ActiveTasks.Add(taskStack);
@@ -23,8 +23,10 @@ namespace Bones3Rebuilt
                 dis.CreateTasks(properties, taskStack);
         }
 
-        /// <inheritdoc cref="IRemeshHandler"/>
-        public void FinishTasks()
+        /// <summary>
+        /// Waits for all current tasks to finish executing before continuing.
+        /// </summary>
+        public void FinishTasks(List<RemeshReport> reports)
         {
             while (m_ActiveTasks.Count > 0)
             {
@@ -32,8 +34,7 @@ namespace Bones3Rebuilt
                 m_ActiveTasks.RemoveAt(0);
 
                 var report = task.ToReport();
-
-                OnRemeshFinish?.Invoke(new RemeshFinishEvent(report));
+                reports.Add(report);
             }
         }
 

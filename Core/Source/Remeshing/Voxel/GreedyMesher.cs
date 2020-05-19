@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+using Bones3Rebuilt.Remeshing;
+
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A utility class for combining quads on a plane in a greedy fashion.
@@ -105,8 +107,8 @@ namespace Bones3Rebuilt
             if (!m_EnableUVs && state.Active)
                 state = new Quad(0, 0);
 
-            if (x < 0 || x >= m_ChunkSize
-                || y < 0 || y >= m_ChunkSize)
+            if (x < 0 || x >= m_ChunkSize ||
+                y < 0 || y >= m_ChunkSize)
                 throw new System.ArgumentOutOfRangeException($"Quad position ({x}, {y}) not within chunk!");
 
             m_Quads[x * m_ChunkSize + y] = state;
@@ -182,9 +184,9 @@ namespace Bones3Rebuilt
         {
             int maxH = m_ChunkSize - 1;
 
-            for (w = q.X; ; w++)
+            for (w = q.X;; w++)
             {
-                for (h = q.Y; ; h++)
+                for (h = q.Y;; h++)
                 {
                     if (h == maxH || !GetQuad(w, h + 1).Equals(q.Quad))
                         break;

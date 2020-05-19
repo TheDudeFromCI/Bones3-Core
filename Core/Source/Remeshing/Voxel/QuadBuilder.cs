@@ -1,6 +1,6 @@
-using Bones3Rebuilt.Util;
+using Bones3Rebuilt.Remeshing;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing.Voxel
 {
     /// <summary>
     /// A utility class for converting quad data into mesh data.

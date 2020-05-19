@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Bones3Rebuilt.Util;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     public class ProcMesh
     {

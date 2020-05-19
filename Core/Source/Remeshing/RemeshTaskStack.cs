@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// Represents a series of remesh tasks being executed for a chunk.
@@ -29,11 +29,11 @@ namespace Bones3Rebuilt
             var collisionMesh = CompressTasks(m_CollisionRemesh);
             var visualMesh = CompressTasks(m_VisualRemesh);
 
-            var atlases = new ITextureAtlas[m_VisualRemesh.Count];
+            var materialIDs = new int[m_VisualRemesh.Count];
             for (int i = 0; i < m_VisualRemesh.Count; i++)
-                atlases[i] = m_VisualRemesh[i].Atlas;
+                materialIDs[i] = m_VisualRemesh[i].MaterialID;
 
-            return new RemeshReport(m_ChunkPosition, collisionMesh, visualMesh, atlases);
+            return new RemeshReport(m_ChunkPosition, collisionMesh, visualMesh, materialIDs);
         }
 
         /// <summary>
@@ -42,14 +42,14 @@ namespace Bones3Rebuilt
         /// <param name="tasks">The list of tasks.</param>
         /// <returns>The layered proc mesh.</returns>
         private LayeredProcMesh CompressTasks<T>(List<T> tasks)
-            where T : IRemeshTask
+        where T : IRemeshTask
         {
             var mesh = new LayeredProcMesh();
 
             for (int i = 0; i < tasks.Count; i++)
             {
-                tasks[i].Finish();
-                mesh.GetLayer(i).AddData(tasks[i].Mesh);
+                var m = tasks[i].Finish();
+                mesh.GetLayer(i).AddData(m);
             }
 
             return mesh;

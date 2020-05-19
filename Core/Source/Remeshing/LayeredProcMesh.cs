@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Remeshing
 {
     /// <summary>
     /// Contains a set of procedural meshes representing submesh layers within a single mesh.
