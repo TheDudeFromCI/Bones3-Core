@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database
 {
     /// <summary>
     /// A file storage directory for handling saving and loading voxel worlds.

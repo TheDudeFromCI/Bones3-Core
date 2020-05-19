@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database
 {
     /// <summary>
     /// Thrown when the received file version cannot be parsed.

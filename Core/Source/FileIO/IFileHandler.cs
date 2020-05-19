@@ -1,4 +1,4 @@
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database
 {
     /// <summary>
     /// This handler is used to read and write a specific object type to the world database folder.

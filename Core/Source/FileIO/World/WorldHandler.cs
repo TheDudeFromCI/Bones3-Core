@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Bones3Rebuilt.World;
 
-namespace Bones3Rebuilt
+namespace Bones3Rebuilt.Database.World
 {
     /// <summary>
     /// Used to maintain the saving and loading of block containers.
@@ -60,7 +60,7 @@ namespace Bones3Rebuilt
             var x = chunkPos.X >> 5;
             var y = chunkPos.Y >> 5;
             var z = chunkPos.Z >> 5;
-            return $"/RegionData/{x}-{y}-{z}.dat";
+            return $"/ChunkData/{x}-{y}-{z}.dat";
         }
 
         /// <summary>
@@ -95,15 +95,12 @@ namespace Bones3Rebuilt
             {
                 writer.Write(REGION_FILE_VERSION);
 
-                // TODO Create region header
-                // TODO Scroll to correct position within file based on header
-                // TODO Compress chunk data.
-
                 for (int i = 0; i < m_Blocks.Length; i++)
                     writer.Write(m_Blocks[i]);
             }
         }
 
+        /// <inheritdoc cref="IFileSaveTask{T}"/>
         public FileSaveStatus FinishTask()
         {
             try
